@@ -14,7 +14,7 @@ h1{margin:0 0 8px;font-size:clamp(26px,4vw,42px)} h2{margin:0 0 12px;font-size:2
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.metric{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:14px}.metric .label{color:var(--muted);font-size:13px}.metric .value{font-size:25px;font-weight:800;margin-top:5px}.metric small{color:var(--muted)}
 .progress{height:12px;background:#24334d;border-radius:999px;overflow:hidden;margin-top:10px}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .25s}
 .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.controls label{font-size:13px;color:var(--muted)} input,select,button{font:inherit} input,select{background:#0d172a;color:var(--text);border:1px solid #3b4c6c;border-radius:9px;padding:9px;min-width:0} button{border:0;border-radius:10px;padding:10px 13px;cursor:pointer;background:var(--accent);color:#082116;font-weight:800} button.secondary{background:#2a3b5c;color:var(--text)} button.danger{background:#5b2635;color:#ffd8df}
-.payday-layout{display:grid;grid-template-columns:minmax(270px,.8fr) minmax(0,1.2fr);gap:14px;height:620px}.payday-list,.allocation{min-height:0;overflow:auto}.payday-list{padding-right:4px}.payday-item{width:100%;display:grid;grid-template-columns:1fr auto;gap:4px;text-align:left;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;margin:0 0 8px}.payday-item:hover,.payday-item.selected{border-color:var(--accent2);background:#1b3150}.payday-item .date{font-weight:800}.payday-item .details{font-size:12px;color:var(--muted)}.payday-item .amount{text-align:right;font-size:12px;color:var(--muted)}.payday-item .amount b{display:block;color:var(--text);font-size:14px}.allocation{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:15px}.allocation-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.allocation-head h3{margin:0;font-size:18px}.allocation-total{font-size:12px;color:var(--muted);text-align:right}.allocation-total b{display:block;color:var(--text);font-size:16px;margin-top:3px}.allocation-actions{display:flex;gap:8px;align-items:flex-end;flex-direction:column}.allocation-actions button{font-size:12px;padding:7px 9px}.allocation-table{width:100%;border-collapse:collapse;font-size:14px}.allocation-table th,.allocation-table td{padding:9px 4px;border-bottom:1px solid #263650;text-align:right}.allocation-table th:first-child,.allocation-table td:first-child{text-align:left}.allocation-table th{color:var(--muted);font-size:12px;font-weight:600}.actual{width:110px}.actual:focus{outline:2px solid var(--accent2)}.status{font-weight:800}.good{color:var(--accent)}.partial{color:var(--warn)}.bad{color:var(--danger)}.muted{color:var(--muted)}.goal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.goal{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:13px}.goal-head{display:flex;justify-content:space-between;gap:10px;font-weight:700}.goal .numbers{font-size:13px;color:var(--muted);margin-top:7px}.mini{height:8px;margin-top:9px}.note{font-size:12px;color:var(--muted);line-height:1.5}.footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12px}
+.payday-layout{display:grid;grid-template-columns:minmax(270px,.8fr) minmax(0,1.2fr);gap:14px;height:620px}.payday-list,.allocation{min-height:0;overflow:auto}.payday-list{padding-right:4px}.payday-item{width:100%;display:grid;grid-template-columns:1fr auto;gap:4px;text-align:left;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;margin:0 0 8px}.payday-item:hover,.payday-item.selected{border-color:var(--accent2);background:#1b3150}.payday-item .date{font-weight:800}.payday-item .details{font-size:12px;color:var(--muted)}.payday-item .amount{text-align:right;font-size:12px;color:var(--muted)}.payday-item .amount b{display:block;color:var(--text);font-size:14px}.allocation{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:15px}.allocation-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.allocation-head h3{margin:0;font-size:18px}.allocation-total{font-size:12px;color:var(--muted);text-align:right}.allocation-total b{display:block;color:var(--text);font-size:16px;margin-top:3px}.allocation-actions{display:flex;gap:8px;align-items:flex-end;flex-direction:column}.allocation-actions button{font-size:12px;padding:7px 9px}.allocation-table{width:100%;border-collapse:collapse;font-size:14px}.allocation-table th,.allocation-table td{padding:9px 4px;border-bottom:1px solid #263650;text-align:right}.allocation-table th:first-child,.allocation-table td:first-child{text-align:left}.allocation-table th{color:var(--muted);font-size:12px;font-weight:600}.actual{width:128px;padding:9px 11px;background:#0a1c33;color:#f4f8ff;border:1px solid #4f72a5;border-radius:9px;text-align:right;font-weight:750;box-shadow:inset 0 1px 0 #ffffff12}.actual.pending{background:#101b2d;color:#9fb0ca;border-color:#40506b;border-style:dashed;font-weight:600}.actual:hover{border-color:#7aa7ff}.actual:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px #65d6a533}.status{font-weight:800}.good{color:var(--accent)}.partial{color:var(--warn)}.bad{color:var(--danger)}.muted{color:var(--muted)}.goal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.goal{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:13px}.goal-head{display:flex;justify-content:space-between;gap:10px;font-weight:700}.goal .numbers{font-size:13px;color:var(--muted);margin-top:7px}.mini{height:8px;margin-top:9px}.note{font-size:12px;color:var(--muted);line-height:1.5}.footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12px}
 </style>
 </head>
 <body>
@@ -45,7 +45,7 @@ h1{margin:0 0 8px;font-size:clamp(26px,4vw,42px)} h2{margin:0 0 12px;font-size:2
 
   <section class="panel">
     <h2>Календарь зарплат и распределений</h2>
-    <p class="note">Выберите выплату слева и внесите факт справа. Enter переводит к следующему полю. Если часть целей в этом месяце пропускается, нажмите «Закрыть выплату» — она получит статус «Готово, неполностью».</p>
+    <p class="note">Поля уже заполнены плановыми суммами — при необходимости просто исправьте их. Enter сохраняет значение и переводит к следующему полю. Если часть целей в этом месяце пропускается, нажмите «Закрыть выплату» — она получит статус «Готово, неполностью».</p>
     <div class="payday-layout"><div class="payday-list" id="paydays"></div><div class="allocation" id="allocation"></div></div>
   </section>
 
@@ -110,11 +110,13 @@ function build(){
     }
   }
   if(!rows.some(r=>r.date===selectedDate)) selectedDate=(rows.find(r=>r.date>=iso(new Date()))||rows[0])?.date||null;
+  normalizeLegacyDefaultValues();
   render();
 }
 function key(date,goal){return date+"|"+goal}
 function paymentStatus(date,sum){
-  if(sum>=PAY) return {text:"✓ Выполнено",className:"good"};
+  const row=rows.find(item=>item.date===date), target=row?plannedForPayment(row):PAY;
+  if(sum>=target) return {text:"✓ Выполнено",className:"good"};
   if(closed[date]) return {text:"✓ Готово, неполностью",className:"partial"};
   return {text:"В процессе",className:"bad"};
 }
@@ -122,10 +124,27 @@ function saveActual(date,goal,value){
   actual[key(date,goal)]=Math.max(0,+value||0);
   localStorage.setItem("financeTrackerActual",JSON.stringify(actual));
 }
-function plannedFor(goal){return PLAN.find(x=>x[0]===goal)[1]/2}
+function plannedFor(goal,nominalDate){
+  const monthly=PLAN.find(x=>x[0]===goal)[1], base=Math.floor(monthly/2);
+  // Нечётный рубль добавляется ко второй выплате месяца, чтобы план за месяц оставался точным.
+  return base+(monthly%2 && new Date(nominalDate+"T12:00:00").getDate()===25?1:0);
+}
+function totalPlannedFor(goal){return rows.reduce((sum,row)=>sum+plannedFor(goal,row.nominal),0)}
+function plannedForPayment(row){return PLAN.reduce((sum,[goal])=>sum+plannedFor(goal,row.nominal),0)}
+function normalizeLegacyDefaultValues(){
+  let changed=false;
+  rows.forEach(row=>PLAN.forEach(([goal,monthly])=>{
+    const storageKey=key(row.date,goal);
+    if(actual[storageKey]===monthly/2 && !Number.isInteger(actual[storageKey])){
+      actual[storageKey]=plannedFor(goal,row.nominal);
+      changed=true;
+    }
+  }));
+  if(changed) localStorage.setItem("financeTrackerActual",JSON.stringify(actual));
+}
 function totalActual(goal){return rows.reduce((s,r)=>s+(+actual[key(r.date,goal)]||0),0)}
 function render(){
-  const totalPlanned=rows.length*PAY, totalActualAll=rows.reduce((s,r)=>s+PLAN.reduce((a,g)=>a+(+actual[key(r.date,g[0])]||0),0),0);
+  const totalPlanned=rows.reduce((sum,row)=>sum+plannedForPayment(row),0), totalActualAll=rows.reduce((s,r)=>s+PLAN.reduce((a,g)=>a+(+actual[key(r.date,g[0])]||0),0),0);
   const pct=totalPlanned?Math.min(100,totalActualAll/totalPlanned*100):0;
   document.getElementById("metrics").innerHTML=[
     ["План выплат",euro(totalPlanned),rows.length+" зарплатных дат"],
@@ -134,30 +153,28 @@ function render(){
     ["Осталось по плану",euro(Math.max(0,totalPlanned-totalActualAll)),"до конца периода"]
   ].map(x=>`<div class="metric"><div class="label">${x[0]}</div><div class="value">${x[1]}</div><small>${x[2]}</small><div class="progress"><div class="bar" style="width:${x[0]==='Выполнено'?pct:0}%"></div></div></div>`).join("");
   document.getElementById("goals").innerHTML=PLAN.map(([g,m])=>{
-    const p=rows.length*plannedFor(g), a=totalActual(g), q=p?Math.min(100,a/p*100):0;
+    const p=totalPlannedFor(g), a=totalActual(g), q=p?Math.min(100,a/p*100):0;
     return `<div class="goal"><div class="goal-head"><span>${g}</span><span>${q.toFixed(0)}%</span></div><div class="numbers">${euro(a)} / ${euro(p)}</div><div class="progress mini"><div class="bar" style="width:${q}%"></div></div></div>`;
   }).join("");
   const paydays=document.getElementById("paydays");
   paydays.innerHTML=rows.map(r=>{
-    const sum=PLAN.reduce((total,[g])=>total+(+actual[key(r.date,g)]||0),0), status=paymentStatus(r.date,sum);
-    return `<button class="payday-item ${r.date===selectedDate?'selected':''}" data-select="${r.date}"><span class="date">${dateRu(r.date)}</span><span class="amount"><b>${euro(sum)}</b>из ${euro(PAY)}</span><span class="details">по графику: ${dateRu(r.nominal)}</span><span class="status ${status.className}">${status.text}</span></button>`;
+    const sum=PLAN.reduce((total,[g])=>total+(+actual[key(r.date,g)]||0),0), target=plannedForPayment(r), status=paymentStatus(r.date,sum);
+    return `<button class="payday-item ${r.date===selectedDate?'selected':''}" data-select="${r.date}"><span class="date">${dateRu(r.date)}</span><span class="amount"><b>${euro(sum)}</b>из ${euro(target)}</span><span class="details">по графику: ${dateRu(r.nominal)}</span><span class="status ${status.className}">${status.text}</span></button>`;
   }).join("");
   paydays.querySelectorAll("[data-select]").forEach(button=>button.addEventListener("click",()=>{selectedDate=button.dataset.select;render()}));
   const selected=rows.find(r=>r.date===selectedDate);
   const allocation=document.getElementById("allocation");
   if(!selected){allocation.innerHTML="<p class=\"muted\">В выбранном периоде нет выплат.</p>";return}
-  const total=PLAN.reduce((sum,[g])=>sum+(+actual[key(selected.date,g)]||0),0), status=paymentStatus(selected.date,total), isClosed=Boolean(closed[selected.date]);
-  allocation.innerHTML=`<div class="allocation-head"><div><h3>${dateRu(selected.date)}</h3><p>Распределение одной выплаты</p></div><div class="allocation-actions"><div class="allocation-total">Отложено<b class="${status.className}">${euro(total)} / ${euro(PAY)}</b></div><button class="secondary" id="toggleClosed">${isClosed?'Вернуть в работу':'Закрыть выплату'}</button></div></div><table class="allocation-table"><thead><tr><th>Направление</th><th>План</th><th>Факт</th></tr></thead><tbody>${PLAN.map(([g,m])=>`<tr><td>${g}</td><td class="muted">${euro(m/2)}</td><td><input class="actual" type="number" min="0" step="1" data-date="${selected.date}" data-goal="${g}" value="${actual[key(selected.date,g)]||""}" placeholder="0"></td></tr>`).join("")}</tbody></table>`;
+  const total=PLAN.reduce((sum,[g])=>sum+(+actual[key(selected.date,g)]||0),0), target=plannedForPayment(selected), status=paymentStatus(selected.date,total), isClosed=Boolean(closed[selected.date]);
+  allocation.innerHTML=`<div class="allocation-head"><div><h3>${dateRu(selected.date)}</h3><p>Распределение одной выплаты</p></div><div class="allocation-actions"><div class="allocation-total">Отложено<b class="${status.className}">${euro(total)} / ${euro(target)}</b></div><button class="secondary" id="toggleClosed">${isClosed?'Вернуть в работу':'Закрыть выплату'}</button></div></div><table class="allocation-table"><thead><tr><th>Направление</th><th>План</th><th>Факт</th></tr></thead><tbody>${PLAN.map(([g])=>{const planned=plannedFor(g,selected.nominal),confirmed=Boolean(actual[key(selected.date,g)]);return `<tr><td>${g}</td><td class="muted">${euro(planned)}</td><td><input class="actual ${confirmed?'confirmed':'pending'}" type="number" min="0" step="1" data-date="${selected.date}" data-goal="${g}" value="${actual[key(selected.date,g)] || planned}" aria-label="Фактическая сумма: ${g}"></td></tr>`}).join("")}</tbody></table>`;
   document.getElementById("toggleClosed").onclick=()=>{
     if(isClosed) delete closed[selected.date]; else closed[selected.date]=true;
     localStorage.setItem("financeTrackerClosed",JSON.stringify(closed)); render();
   };
-  allocation.querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{
-    saveActual(inp.dataset.date,inp.dataset.goal,inp.value); render();
+  allocation.querySelectorAll("input").forEach(inp=>inp.addEventListener("input",()=>{
+    inp.classList.remove("confirmed");inp.classList.add("pending");
   }));
-  allocation.querySelectorAll("input").forEach(inp=>inp.addEventListener("input",e=>{
-    saveActual(inp.dataset.date,inp.dataset.goal,inp.value);
-  }));
+  allocation.querySelectorAll("input").forEach(inp=>inp.addEventListener("focus",()=>inp.select()));
   allocation.querySelectorAll("input").forEach((inp,index,inputs)=>inp.addEventListener("keydown",e=>{
     if(e.key!=="Enter") return;
     e.preventDefault();
@@ -214,6 +231,7 @@ document.getElementById("rebuild").onclick=build;
 document.getElementById("save").onclick=e=>{
   document.querySelectorAll("#allocation input").forEach(inp=>saveActual(inp.dataset.date,inp.dataset.goal,inp.value));
   localStorage.setItem("financeTrackerClosed",JSON.stringify(closed));
+  render();
   const button=e.currentTarget, label=button.textContent;
   button.textContent="✓ Сохранено";
   setTimeout(()=>button.textContent=label,1600);
