@@ -28,7 +28,10 @@ h1{margin:0 0 8px;font-size:clamp(26px,4vw,42px)} h2{margin:0 0 12px;font-size:2
     <div class="controls">
       <label>Старт периода <input id="startDate" type="date"></label>
       <button id="rebuild">Пересчитать год</button>
+      <button class="secondary" id="save">Сохранить в браузере</button>
       <button class="secondary" id="export">Экспорт CSV</button>
+      <button class="secondary" id="restoreCsv">Загрузить CSV</button>
+      <input id="importCsv" type="file" accept="text/csv,.csv" hidden>
       <button class="danger" id="reset">Сбросить факт</button>
     </div>
   </div>
@@ -152,6 +155,9 @@ function render(){
   allocation.querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{
     saveActual(inp.dataset.date,inp.dataset.goal,inp.value); render();
   }));
+  allocation.querySelectorAll("input").forEach(inp=>inp.addEventListener("input",e=>{
+    saveActual(inp.dataset.date,inp.dataset.goal,inp.value);
+  }));
   allocation.querySelectorAll("input").forEach((inp,index,inputs)=>inp.addEventListener("keydown",e=>{
     if(e.key!=="Enter") return;
     e.preventDefault();
@@ -163,18 +169,58 @@ function render(){
   document.getElementById("summary").textContent=`Период: ${dateRu(iso(startDate.value?getStart():new Date()))} — ${dateRu(iso(addDays(getStart(),DAYS-1)))} · ${rows.length} выплат`;
 }
 function exportCSV(){
-  const cols=["Дата выплаты","Номинальная дата","Сумма ЗП",...PLAN.map(x=>x[0]),"Факт всего"];
+  const cols=["Дата начала периода","Дата выплаты","Номинальная дата","Сумма ЗП",...PLAN.map(x=>x[0]),"Факт всего","Статус выплаты"];
   let csv=[cols.join(";")];
-  rows.forEach(r=>{let vals=PLAN.map(([g])=>+actual[key(r.date,g)]||0);csv.push([r.date,r.nominal,PAY,...vals,vals.reduce((a,b)=>a+b,0)].join(";"))});
+  rows.forEach(r=>{let vals=PLAN.map(([g])=>+actual[key(r.date,g)]||0);csv.push([startDate.value,r.date,r.nominal,PAY,...vals,vals.reduce((a,b)=>a+b,0),closed[r.date]?"closed":""].join(";"))});
   const blob=new Blob(["\ufeff"+csv.join("\n")],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="financial-tracker.csv";a.click();URL.revokeObjectURL(a.href);
+}
+function restoreCSV(file){
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const lines=String(reader.result).trim().split(/\r?\n/);
+      const columns=lines.shift().replace(/^\uFEFF/,"").split(";");
+      const dateColumn=columns.indexOf("Дата выплаты"), startColumn=columns.indexOf("Дата начала периода"), statusColumn=columns.indexOf("Статус выплаты");
+      const goalColumns=PLAN.map(([goal])=>columns.indexOf(goal));
+      if(dateColumn<0 || goalColumns.some(index=>index<0)) throw new Error("invalid csv");
+      const importedActual={}, importedClosed={}; let importedStart="";
+      lines.filter(Boolean).forEach(line=>{
+        const cells=line.split(";"), date=cells[dateColumn];
+        if(!/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
+        if(!importedStart && startColumn>=0 && /^\d{4}-\d{2}-\d{2}$/.test(cells[startColumn])) importedStart=cells[startColumn];
+        PLAN.forEach(([goal],index)=>{
+          const value=Number((cells[goalColumns[index]]||"").replace(",","."));
+          if(Number.isFinite(value) && value>0) importedActual[key(date,goal)]=value;
+        });
+        if(statusColumn>=0 && cells[statusColumn]==="closed") importedClosed[date]=true;
+      });
+      if(!confirm("Заменить текущие данные данными из выбранного CSV-файла?")) return;
+      actual=importedActual; closed=importedClosed;
+      if(importedStart) startDate.value=importedStart;
+      localStorage.setItem("financeTrackerActual",JSON.stringify(actual));
+      localStorage.setItem("financeTrackerClosed",JSON.stringify(closed));
+      build();
+      alert("Данные из CSV загружены.");
+    }catch(error){alert("Не удалось загрузить CSV: выберите файл, экспортированный финансовым трекером.")}
+  };
+  reader.readAsText(file);
 }
 const startDate=document.getElementById("startDate");
 startDate.value=iso(new Date());
 actual=JSON.parse(localStorage.getItem("financeTrackerActual")||"{}");
 closed=JSON.parse(localStorage.getItem("financeTrackerClosed")||"{}");
 document.getElementById("rebuild").onclick=build;
+document.getElementById("save").onclick=e=>{
+  document.querySelectorAll("#allocation input").forEach(inp=>saveActual(inp.dataset.date,inp.dataset.goal,inp.value));
+  localStorage.setItem("financeTrackerClosed",JSON.stringify(closed));
+  const button=e.currentTarget, label=button.textContent;
+  button.textContent="✓ Сохранено";
+  setTimeout(()=>button.textContent=label,1600);
+};
 document.getElementById("export").onclick=exportCSV;
+document.getElementById("restoreCsv").onclick=()=>document.getElementById("importCsv").click();
+document.getElementById("importCsv").onchange=e=>{const file=e.target.files[0];if(file) restoreCSV(file);e.target.value=""};
 document.getElementById("reset").onclick=()=>{if(confirm("Удалить все фактические суммы и статусы выплат?")){actual={};closed={};localStorage.removeItem("financeTrackerActual");localStorage.removeItem("financeTrackerClosed");render()}};
 build();
 </script>
