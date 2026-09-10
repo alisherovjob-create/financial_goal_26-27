@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Финансовый трекер — 365 дней</title>
+<style>
+:root{--bg:#0f172a;--panel:#111c33;--panel2:#17233d;--line:#2b3a58;--text:#e5edf8;--muted:#9fb0ca;--accent:#65d6a5;--accent2:#7aa7ff;--warn:#ffd166;--danger:#ff7b8b}
+*{box-sizing:border-box} body{margin:0;background:linear-gradient(135deg,#0b1222,#14213d);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.wrap{max-width:1500px;margin:auto;padding:24px}.hero{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:18px;flex-wrap:wrap}
+h1{margin:0 0 8px;font-size:clamp(26px,4vw,42px)} h2{margin:0 0 12px;font-size:20px} p{color:var(--muted);margin:6px 0}
+.badge{display:inline-block;padding:6px 10px;border:1px solid #365070;border-radius:999px;color:#b9caff;background:#172844;font-size:12px}
+.panel{background:rgba(17,28,51,.92);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 12px 30px #0002;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.metric{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:14px}.metric .label{color:var(--muted);font-size:13px}.metric .value{font-size:25px;font-weight:800;margin-top:5px}.metric small{color:var(--muted)}
+.progress{height:12px;background:#24334d;border-radius:999px;overflow:hidden;margin-top:10px}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .25s}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.controls label{font-size:13px;color:var(--muted)} input,select,button{font:inherit} input,select{background:#0d172a;color:var(--text);border:1px solid #3b4c6c;border-radius:9px;padding:9px;min-width:0} button{border:0;border-radius:10px;padding:10px 13px;cursor:pointer;background:var(--accent);color:#082116;font-weight:800} button.secondary{background:#2a3b5c;color:var(--text)} button.danger{background:#5b2635;color:#ffd8df}
+.table-wrap{overflow:auto;max-height:680px;border:1px solid var(--line);border-radius:12px}table{width:100%;border-collapse:separate;border-spacing:0;min-width:1250px;font-size:13px}th,td{padding:9px 10px;border-bottom:1px solid #263650;white-space:nowrap;text-align:right}th{position:sticky;top:0;background:#1b2a46;z-index:2;color:#c8d7ee}th:first-child,td:first-child{text-align:left;position:sticky;left:0;z-index:1;background:#14213a}th:first-child{z-index:3}.payday{background:#183b35!important}.holiday{color:var(--warn)}.weekend{color:#ffb3bd}.actual{width:105px}.actual:focus{outline:2px solid var(--accent2)}.status{font-weight:800}.good{color:var(--accent)}.bad{color:var(--danger)}.muted{color:var(--muted)}.goal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.goal{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:13px}.goal-head{display:flex;justify-content:space-between;gap:10px;font-weight:700}.goal .numbers{font-size:13px;color:var(--muted);margin-top:7px}.mini{height:8px;margin-top:9px}.note{font-size:12px;color:var(--muted);line-height:1.5}.footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.goal-grid{grid-template-columns:1fr}.wrap{padding:12px}.panel{padding:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <span class="badge">365 дней · финансовый квест</span>
+      <h1>Мой финансовый трекер</h1>
+      <p>Каждая зарплата = половина месячного оклада. План автоматически распределяется по целям, а фактические суммы можно вводить вручную.</p>
+    </div>
+    <div class="controls">
+      <label>Старт периода <input id="startDate" type="date"></label>
+      <button id="rebuild">Пересчитать год</button>
+      <button class="secondary" id="export">Экспорт CSV</button>
+      <button class="danger" id="reset">Сбросить факт</button>
+    </div>
+  </div>
+
+  <section class="grid" id="metrics"></section>
+
+  <section class="panel">
+    <h2>Прогресс по целям</h2>
+    <div class="goal-grid" id="goals"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Календарь зарплат и распределений</h2>
+    <p class="note">Зарплатная дата — 10-е или 25-е число. Если дата выпадает на субботу, воскресенье или указанный праздник, она переносится на предыдущий рабочий день. В каждой строке можно указать фактическую сумму по каждому направлению.</p>
+    <div class="table-wrap"><table id="tracker"><thead></thead><tbody></tbody></table></div>
+  </section>
+
+  <section class="panel">
+    <h2>Правила и настройки</h2>
+    <p class="note">Суммы из плана: зарплата 171 000 ₽ в месяц, каждая выплата — 85 500 ₽. Плановые суммы по направлениям делятся пополам между двумя выплатами месяца. Учитываются общероссийские нерабочие праздничные дни и переносы выходных.</p>
+    <div class="footer"><span id="summary"></span><span>Данные сохраняются в браузере автоматически.</span></div>
+  </section>
+</div>
+
+<script>
+const PLAN = [
+  ["Быт",68600],["Инвестиции (IKIGAI)",25000],["Инвестиции (Собственный портфель)",25000],
+  ["Машина",2083],["Путешествия",10000],["Медицина",5000],["Собственные потребности",10000],
+  ["Подарки",5000],["Хотелки",10000],["Фитнес/Спорт",8333],["Собственные отложения",1983]
+];
+const MONTHLY = 171000, PAY = 85500, DAYS=365;
+const HOLIDAYS = new Set([
+  // Утверждённые переносы выходных в России на 2026 год.
+  "2026-01-09", "2026-12-31",
+  // Переносы, предусмотренные проектом производственного календаря на 2027 год.
+  "2027-02-22", "2027-11-05", "2027-12-31"
+]);
+let rows=[], actual={};
+const euro = n => new Intl.NumberFormat("ru-RU",{style:"currency",currency:"RUB",maximumFractionDigits:0}).format(n||0);
+const iso = d => d.toISOString().slice(0,10);
+const dateRu = s => new Date(s+"T12:00:00").toLocaleDateString("ru-RU",{day:"2-digit",month:"2-digit",year:"numeric"});
+function russianPublicHolidays(year){
+  const dates=[];
+  for(let day=1;day<=8;day++) dates.push(`${year}-01-${String(day).padStart(2,"0")}`);
+  ["02-23","03-08","05-01","05-09","06-12","11-04"].forEach(day=>dates.push(`${year}-${day}`));
+  return new Set(dates);
+}
+function observedHoliday(d){
+  // Если праздник (кроме новогодних каникул) совпал с выходным, выходной переносится
+  // на ближайший рабочий день согласно ст. 112 ТК РФ.
+  const year=d.getFullYear(), fixed=russianPublicHolidays(year), day=iso(d);
+  if(!fixed.has(day) || d.getMonth()===0 || (d.getDay()!==0 && d.getDay()!==6)) return false;
+  let observed=addDays(d,1);
+  while(observed.getDay()===0 || observed.getDay()===6 || fixed.has(iso(observed))) observed=addDays(observed,1);
+  return iso(observed);
+}
+function isOff(d){
+  const day=iso(d);
+  if(d.getDay()===0 || d.getDay()===6 || HOLIDAYS.has(day) || russianPublicHolidays(d.getFullYear()).has(day)) return true;
+  for(const offset of [-1,-2]){
+    const holiday=addDays(d,offset);
+    if(observedHoliday(holiday)===day) return true;
+  }
+  return false;
+}
+function previousWorkday(d){let x=new Date(d);while(isOff(x))x.setDate(x.getDate()-1);return x}
+function addDays(d,n){let x=new Date(d);x.setDate(x.getDate()+n);return x}
+function monthKey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")}
+function getStart(){return new Date((document.getElementById("startDate").value||iso(new Date()))+"T12:00:00")}
+function build(){
+  rows=[]; let start=getStart(), end=addDays(start,DAYS-1);
+  for(let d=new Date(start);d<=end;d=addDays(d,1)){
+    if(d.getDate()===10 || d.getDate()===25){
+      const payDate=previousWorkday(d);
+      if(payDate>=start && payDate<=end) rows.push({date:iso(payDate),nominal:iso(d),month:monthKey(d),type:"pay"});
+    }
+  }
+  render();
+}
+function key(date,goal){return date+"|"+goal}
+function plannedFor(goal){return PLAN.find(x=>x[0]===goal)[1]/2}
+function totalActual(goal){return rows.reduce((s,r)=>s+(+actual[key(r.date,goal)]||0),0)}
+function render(){
+  const totalPlanned=rows.length*PAY, totalActualAll=rows.reduce((s,r)=>s+PLAN.reduce((a,g)=>a+(+actual[key(r.date,g[0])]||0),0),0);
+  const pct=totalPlanned?Math.min(100,totalActualAll/totalPlanned*100):0;
+  document.getElementById("metrics").innerHTML=[
+    ["План выплат",euro(totalPlanned),rows.length+" зарплатных дат"],
+    ["Фактически отложено",euro(totalActualAll),"введено вручную"],
+    ["Выполнено",pct.toFixed(1)+"%","от плана"],
+    ["Осталось по плану",euro(Math.max(0,totalPlanned-totalActualAll)),"до конца периода"]
+  ].map(x=>`<div class="metric"><div class="label">${x[0]}</div><div class="value">${x[1]}</div><small>${x[2]}</small><div class="progress"><div class="bar" style="width:${x[0]==='Выполнено'?pct:0}%"></div></div></div>`).join("");
+  document.getElementById("goals").innerHTML=PLAN.map(([g,m])=>{
+    const p=rows.length*plannedFor(g), a=totalActual(g), q=p?Math.min(100,a/p*100):0;
+    return `<div class="goal"><div class="goal-head"><span>${g}</span><span>${q.toFixed(0)}%</span></div><div class="numbers">${euro(a)} / ${euro(p)}</div><div class="progress mini"><div class="bar" style="width:${q}%"></div></div></div>`;
+  }).join("");
+  const head=document.querySelector("#tracker thead");
+  head.innerHTML="<tr><th>Дата выплаты</th><th>Номинальная дата</th><th>Сумма ЗП</th>"+PLAN.map(g=>`<th>${g[0]}<br><span class="muted">план / факт</span></th>`).join("")+"<th>Факт всего</th><th>Статус</th></tr>";
+  const body=document.querySelector("#tracker tbody");
+  body.innerHTML=rows.map(r=>{
+    const vals=PLAN.map(([g,m])=>+actual[key(r.date,g)]||0), sum=vals.reduce((a,b)=>a+b,0), complete=sum>=PAY;
+    return `<tr class="payday"><td><b>${dateRu(r.date)}</b></td><td class="muted">${dateRu(r.nominal)}</td><td>${euro(PAY)}</td>`+
+      PLAN.map(([g,m])=>`<td><div class="muted">${euro(m/2)}</div><input class="actual" type="number" min="0" step="1" data-date="${r.date}" data-goal="${g}" value="${actual[key(r.date,g)]||""}" placeholder="0"></td>`).join("")+
+      `<td><b>${euro(sum)}</b></td><td class="status ${complete?'good':'bad'}">${complete?'✓ Выполнено':'В процессе'}</td></tr>`;
+  }).join("");
+  body.querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{
+    actual[key(inp.dataset.date,inp.dataset.goal)]=Math.max(0,+inp.value||0);
+    localStorage.setItem("financeTrackerActual",JSON.stringify(actual)); render();
+  }));
+  document.getElementById("summary").textContent=`Период: ${dateRu(iso(startDate.value?getStart():new Date()))} — ${dateRu(iso(addDays(getStart(),DAYS-1)))} · ${rows.length} выплат`;
+}
+function exportCSV(){
+  const cols=["Дата выплаты","Номинальная дата","Сумма ЗП",...PLAN.map(x=>x[0]),"Факт всего"];
+  let csv=[cols.join(";")];
+  rows.forEach(r=>{let vals=PLAN.map(([g])=>+actual[key(r.date,g)]||0);csv.push([r.date,r.nominal,PAY,...vals,vals.reduce((a,b)=>a+b,0)].join(";"))});
+  const blob=new Blob(["\ufeff"+csv.join("\n")],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="financial-tracker.csv";a.click();URL.revokeObjectURL(a.href);
+}
+const startDate=document.getElementById("startDate");
+startDate.value=iso(new Date());
+actual=JSON.parse(localStorage.getItem("financeTrackerActual")||"{}");
+document.getElementById("rebuild").onclick=build;
+document.getElementById("export").onclick=exportCSV;
+document.getElementById("reset").onclick=()=>{if(confirm("Удалить все фактические суммы?")){actual={};localStorage.removeItem("financeTrackerActual");render()}};
+build();
+</script>
+</body>
+</html>
