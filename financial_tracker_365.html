@@ -11,10 +11,11 @@
 h1{margin:0 0 8px;font-size:clamp(26px,4vw,42px)} h2{margin:0 0 12px;font-size:20px} p{color:var(--muted);margin:6px 0}
 .badge{display:inline-block;padding:6px 10px;border:1px solid #365070;border-radius:999px;color:#b9caff;background:#172844;font-size:12px}
 .panel{background:rgba(17,28,51,.92);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 12px 30px #0002;margin-bottom:18px}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.metric{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:14px}.metric .label{color:var(--muted);font-size:13px}.metric .value{font-size:25px;font-weight:800;margin-top:5px}.metric small{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.metric{position:relative;overflow:hidden;min-height:178px;padding:16px;border:1px solid #31476b;border-radius:18px;background:linear-gradient(145deg,#1a2b49,#14213a);box-shadow:inset 0 1px #ffffff0b,0 10px 22px #00000014;display:flex;flex-direction:column}.metric:after{content:"";position:absolute;width:130px;height:130px;border-radius:50%;right:-62px;top:-70px;background:radial-gradient(circle,#7aa7ff22,transparent 68%);pointer-events:none}.metric-top{display:flex;align-items:center;gap:9px;color:#b6c8e3;font-weight:750;font-size:13px;position:relative;z-index:1}.metric-icon{display:grid;place-items:center;width:29px;height:29px;border-radius:9px;background:#2b4268;color:#b8d2ff;font-size:16px}.metric-value{font-size:31px;line-height:1.08;font-weight:850;letter-spacing:-.7px;margin:17px 0 5px;position:relative;z-index:1}.metric-detail{font-size:12px;color:var(--muted);position:relative;z-index:1}.metric-progress{height:9px;border-radius:999px;background:#263955;overflow:hidden;margin-top:auto;position:relative;z-index:1}.metric-progress span{display:block;height:100%;width:0;border-radius:inherit;box-shadow:0 0 13px #7aa7ff8c;transition:width .3s}.metric-meta{display:flex;justify-content:space-between;gap:8px;margin-top:8px;color:#94a9c8;font-size:11px;position:relative;z-index:1}.metric-meta b{color:#d7e4f8}.metric-earned .metric-icon,.metric-earned .metric-progress span{background:linear-gradient(90deg,#4a93ff,#65d6a5)}.metric-remaining .metric-icon,.metric-remaining .metric-progress span{background:linear-gradient(90deg,#8c88ff,#7aa7ff)}.metric-payments .metric-icon,.metric-payments .metric-progress span{background:linear-gradient(90deg,#536dff,#7aa7ff)}
 .progress{height:12px;background:#24334d;border-radius:999px;overflow:hidden;margin-top:10px}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .25s}
 .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.controls label{font-size:13px;color:var(--muted)} input,select,button{font:inherit} input,select{background:#0d172a;color:var(--text);border:1px solid #3b4c6c;border-radius:9px;padding:9px;min-width:0} button{border:0;border-radius:10px;padding:10px 13px;cursor:pointer;background:var(--accent);color:#082116;font-weight:800} button.secondary{background:#2a3b5c;color:var(--text)} button.danger{background:#5b2635;color:#ffd8df}
 .run-rate{display:grid;grid-template-columns:auto minmax(220px,1fr) auto;gap:18px;align-items:center;background:linear-gradient(100deg,#172a49,#162b3d);border:1px solid #36567d;border-radius:15px;padding:16px}.run-rate-icon{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:#223b61;color:#a9c8ff;font-size:22px}.run-rate-label{font-size:13px;color:var(--muted)}.run-rate-title{font-size:18px;font-weight:800;margin-top:3px}.run-rate-copy{font-size:13px;color:var(--muted);margin-top:4px}.run-rate-value{text-align:right;font-size:20px;font-weight:850}.run-rate-value small{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-top:3px}.payday-layout{display:grid;grid-template-columns:minmax(270px,.8fr) minmax(0,1.2fr);gap:14px;height:620px}.payday-list,.allocation{min-height:0;overflow:auto}.payday-list{padding-right:4px}.payday-item{width:100%;display:grid;grid-template-columns:1fr auto;gap:4px;text-align:left;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;margin:0 0 8px}.payday-item:hover,.payday-item.selected{border-color:var(--accent2);background:#1b3150}.payday-item .date{font-weight:800}.payday-item .details{font-size:12px;color:var(--muted)}.payday-item .amount{text-align:right;font-size:12px;color:var(--muted)}.payday-item .amount b{display:block;color:var(--text);font-size:14px}.allocation{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:15px}.allocation-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.allocation-head h3{margin:0;font-size:18px}.allocation-total{font-size:12px;color:var(--muted);text-align:right}.allocation-total b{display:block;color:var(--text);font-size:16px;margin-top:3px}.allocation-actions{display:flex;gap:8px;align-items:flex-end;flex-direction:column}.allocation-actions button{font-size:12px;padding:7px 9px}.allocation-table{width:100%;border-collapse:collapse;font-size:14px}.allocation-table th,.allocation-table td{padding:9px 4px;border-bottom:1px solid #263650;text-align:right}.allocation-table th:first-child,.allocation-table td:first-child{text-align:left}.allocation-table th{color:var(--muted);font-size:12px;font-weight:600}.actual{width:128px;padding:9px 11px;background:#0a1c33;color:#f4f8ff;border:1px solid #4f72a5;border-radius:9px;text-align:right;font-weight:750;box-shadow:inset 0 1px 0 #ffffff12}.actual.pending{background:#101b2d;color:#9fb0ca;border-color:#40506b;border-style:dashed;font-weight:600}.actual:hover{border-color:#7aa7ff}.actual:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px #65d6a533}.status{font-weight:800}.good{color:var(--accent)}.partial{color:var(--warn)}.bad{color:var(--danger)}.muted{color:var(--muted)}.goal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.goal{background:linear-gradient(145deg,#192742,#152139);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:inset 0 1px #ffffff08}.goal.pace-good{border-color:#326b59}.goal.pace-warn,.goal.pace-partial{border-color:#806834}.goal.pace-bad{border-color:#743946}.goal-head{display:flex;justify-content:space-between;gap:10px;font-weight:700}.goal .numbers{font-size:13px;color:var(--muted);margin-top:8px}.pace-badge{font-size:11px;font-weight:800;padding:4px 7px;border-radius:999px;white-space:nowrap;background:#273956;color:var(--muted)}.pace-good .pace-badge{background:#1d493d;color:#8ce5bd}.pace-warn .pace-badge,.pace-partial .pace-badge{background:#554523;color:#ffe197}.pace-bad .pace-badge{background:#572b36;color:#ffb7c0}.goal-track{height:9px;background:#24334d;border-radius:999px;overflow:visible;position:relative;margin-top:11px}.goal-track .bar{height:100%;border-radius:999px}.pace-line{position:absolute;top:-3px;bottom:-3px;width:2px;background:#e5edf8;border-radius:2px;opacity:.8}.pace-numbers{display:flex;justify-content:space-between;gap:8px;margin-top:8px;font-size:11px;color:var(--muted)}.pace-numbers b{color:#c9d8ed}.note{font-size:12px;color:var(--muted);line-height:1.5}.footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12px}
+.sync-status{font-size:13px;color:var(--muted)}.sync-status[data-status="saved"]{color:var(--accent)}.sync-status[data-status="error"],.sync-status[data-status="offline"]{color:var(--warn)}
 </style>
 </head>
 <body>
@@ -35,6 +36,8 @@ h1{margin:0 0 8px;font-size:clamp(26px,4vw,42px)} h2{margin:0 0 12px;font-size:2
       <button class="danger" id="reset">Сбросить факт</button>
     </div>
   </div>
+
+  <div class="controls" style="margin-bottom:18px"><button class="secondary" id="sync">Синхронизировать</button><span class="sync-status" id="syncStatus" role="status" aria-live="polite">Загрузка данных…</span></div>
 
   <section class="grid" id="metrics"></section>
 
@@ -59,6 +62,129 @@ h1{margin:0 0 8px;font-size:clamp(26px,4vw,42px)} h2{margin:0 0 12px;font-size:2
 </div>
 
 <script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxyXlfMsLI5Rtqs5pRAyI-jBSozz_n-5YHSTcrkU-KpD9yapOXZPlHC12Tip6o6TkC5/exec';
+const SYNC_CACHE_KEY = 'financeTrackerSyncV1', SAVE_DELAY = 850;
+let pending = {}, syncTimer, saving = null, loading = null, storageFailed = false;
+function setSyncStatus(status, message){
+  const el=document.getElementById('syncStatus');
+  el.dataset.status=status;
+  el.textContent=storageFailed?'Ошибка синхронизации — локальный кэш недоступен':message;
+}
+function readCache(name, fallback){
+  try{return JSON.parse(localStorage.getItem(name)||'null')??fallback}
+  catch(error){storageFailed=true;return fallback}
+}
+function persistCache(){
+  try{
+    // One atomic snapshot keeps values and their pending flags together across reloads.
+    localStorage.setItem(SYNC_CACHE_KEY,JSON.stringify({actual,pending}));
+    localStorage.setItem('financeTrackerActual',JSON.stringify(actual));
+    storageFailed=false;
+  }catch(error){storageFailed=true;setSyncStatus('error','Ошибка синхронизации')}
+}
+function scheduleSync(delay=SAVE_DELAY){
+  clearTimeout(syncTimer);
+  syncTimer=setTimeout(()=>syncPendingEntries(),delay);
+}
+function queueEntry(date,category,value,planned){
+  const id=key(date,category), amount=Number(value);
+  actual[id]=Number.isFinite(amount)?Math.max(0,amount):0;
+  pending[id]={date,category,planned,actual:actual[id],revision:Date.now()+":"+Math.random(),due:Date.now()+SAVE_DELAY};
+  persistCache();
+  setSyncStatus(navigator.onLine?'saving':'offline',navigator.onLine?'Сохраняется…':'Нет подключения — сохранено локально');
+  scheduleSync();
+}
+async function requestCloud(options={}){
+  const controller=new AbortController(), timeout=setTimeout(()=>controller.abort(),20000);
+  try{
+    const response=await fetch(APPS_SCRIPT_URL,{...options,signal:controller.signal,redirect:'follow'});
+    const data=await response.json();
+    if(!response.ok || data.ok!==true) throw new Error('API rejected request');
+    return data;
+  }finally{clearTimeout(timeout)}
+}
+function reportSyncError(error){
+  const offline=!navigator.onLine || error instanceof TypeError || error.name==='AbortError';
+  setSyncStatus(offline?'offline':'error',offline?'Нет подключения — сохранено локально':'Ошибка синхронизации');
+}
+async function saveCloudEntry(entry){
+  const {date,category,planned,actual}=entry;
+  return requestCloud({method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({date,category,planned,actual})});
+}
+function syncPendingEntries(){
+  if(saving) return saving;
+  if(loading) return loading.then(()=>syncPendingEntries());
+  if(!navigator.onLine){setSyncStatus('offline','Нет подключения — сохранено локально');return Promise.resolve()}
+  saving=(async()=>{
+    try{
+      // Serialize requests. An acknowledgement clears only the exact version sent.
+      while(true){
+        const pair=Object.entries(pending).find(([,entry])=>entry.due<=Date.now());
+        if(!pair) break;
+        const [id,entry]=pair;
+        setSyncStatus('saving','Сохраняется…');
+        await saveCloudEntry(entry);
+        if(pending[id]?.revision===entry.revision){delete pending[id];persistCache()}
+      }
+      if(Object.keys(pending).length){scheduleSync();setSyncStatus('saving','Сохраняется…')}
+      else setSyncStatus('saved','Сохранено ✓');
+    }catch(error){reportSyncError(error);scheduleSync(15000)}
+    finally{saving=null}
+  })();
+  return saving;
+}
+function loadCloudEntries(){
+  if(loading) return loading;
+  const previousSave=saving;
+  loading=(async()=>{
+    try{
+      if(previousSave) await previousSave;
+      setSyncStatus('loading','Загрузка данных…');
+      const data=await requestCloud({cache:'no-store'});
+      if(!Array.isArray(data.entries)) throw new Error('Invalid entries');
+      // Validate before applying anything, including rows outside the visible period.
+      const entries=data.entries.map(entry=>{
+        if(!/^\d{4}-\d{2}-\d{2}$/.test(entry.Date) || typeof entry.Category!=='string' || typeof entry.Actual!=='number' || !Number.isFinite(entry.Actual) || entry.Actual<0) throw new Error('Invalid entry');
+        return entry;
+      });
+      entries.forEach(entry=>{
+        const id=key(entry.Date,entry.Category);
+        if(!pending[id]) actual[id]=entry.Actual;
+      });
+      persistCache();
+      renderPreservingInput();
+      setSyncStatus(Object.keys(pending).length?'saving':'saved',Object.keys(pending).length?'Сохраняется…':'Сохранено ✓');
+    }catch(error){reportSyncError(error)}
+    finally{loading=null}
+  })();
+  return loading;
+}
+async function synchronize(){
+  await loadCloudEntries();
+  if(Object.keys(pending).length) await syncPendingEntries();
+}
+function renderPreservingInput(){
+  const focused=document.activeElement;
+  const editing=focused?.matches('#allocation input');
+  render(Boolean(editing));
+  if(editing) document.querySelectorAll('#allocation input').forEach(input=>{
+    const id=key(input.dataset.date,input.dataset.goal);
+    if(input!==focused && Object.hasOwn(actual,id)) input.value=actual[id];
+    input.classList.toggle('pending',!Object.hasOwn(actual,id));
+    input.classList.toggle('confirmed',Object.hasOwn(actual,id));
+  });
+}
+function replaceActual(next){
+  // Explicit zeroes prevent reset/import values from returning on the next GET.
+  const ids=new Set([...Object.keys(actual),...Object.keys(next)]);
+  for(const id of ids){
+    const split=id.indexOf('|'), date=id.slice(0,split), category=id.slice(split+1);
+    if(!PLAN.some(([goal])=>goal===category)) continue;
+    const row=rows.find(row=>row.date===date);
+    queueEntry(date,category,next[id]??0,pending[id]?.planned??plannedFor(category,row?.nominal||date));
+  }
+}
+
 const PLAN = [
   ["Быт",68600],["Инвестиции (IKIGAI)",25000],["Инвестиции (Собственный портфель)",25000],
   ["Машина",2083],["Путешествия",10000],["Медицина",5000],["Собственные потребности",10000],
@@ -104,6 +230,7 @@ function addDays(d,n){let x=new Date(d);x.setDate(x.getDate()+n);return x}
 function monthKey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")}
 function getStart(){return new Date((document.getElementById("startDate").value||iso(new Date()))+"T12:00:00")}
 function build(){
+  try{localStorage.setItem("financeTrackerStart",JSON.stringify(startDate.value))}catch(error){storageFailed=true}
   rows=[]; let start=getStart(), end=addDays(start,DAYS-1);
   for(let d=new Date(start);d<=end;d=addDays(d,1)){
     if(d.getDate()===10 || d.getDate()===25){
@@ -123,8 +250,8 @@ function paymentStatus(date,sum){
   return {text:"В процессе",className:"bad"};
 }
 function saveActual(date,goal,value){
-  actual[key(date,goal)]=Math.max(0,+value||0);
-  localStorage.setItem("financeTrackerActual",JSON.stringify(actual));
+  const row=rows.find(row=>row.date===date);
+  queueEntry(date,goal,value,plannedFor(goal,row?.nominal||date));
 }
 function plannedFor(goal,nominalDate){
   const monthly=PLAN.find(x=>x[0]===goal)[1], base=Math.floor(monthly/2);
@@ -137,7 +264,7 @@ function normalizeLegacyDefaultValues(){
   let changed=false;
   rows.forEach(row=>PLAN.forEach(([goal,monthly])=>{
     const storageKey=key(row.date,goal);
-    if(actual[storageKey]===monthly/2 && !Number.isInteger(actual[storageKey])){
+    if(!syncCache && actual[storageKey]===monthly/2 && !Number.isInteger(actual[storageKey])){
       actual[storageKey]=plannedFor(goal,row.nominal);
       changed=true;
     }
@@ -154,16 +281,17 @@ function paceStatus(actualAmount,plannedAmount){
   if(ratio>=.8) return {label:"Ниже темпа",className:"partial"};
   return {label:"Просадка",className:"bad"};
 }
-function render(){
+function render(preserveAllocation=false){
   const totalPlanned=rows.reduce((sum,row)=>sum+plannedForPayment(row),0), totalActualAll=rows.reduce((s,r)=>s+PLAN.reduce((a,g)=>a+(+actual[key(r.date,g[0])]||0),0),0);
   const pct=totalPlanned?Math.min(100,totalActualAll/totalPlanned*100):0;
-  document.getElementById("metrics").innerHTML=[
-    ["План выплат",euro(totalPlanned),rows.length+" зарплатных дат"],
-    ["Фактически отложено",euro(totalActualAll),"введено вручную"],
-    ["Выполнено",pct.toFixed(1)+"%","от плана"],
-    ["Осталось по плану",euro(Math.max(0,totalPlanned-totalActualAll)),"до конца периода"]
-  ].map(x=>`<div class="metric"><div class="label">${x[0]}</div><div class="value">${x[1]}</div><small>${x[2]}</small><div class="progress"><div class="bar" style="width:${x[0]==='Выполнено'?pct:0}%"></div></div></div>`).join("");
-  const today=iso(new Date()), plannedToToday=PLAN.reduce((sum,[goal])=>sum+plannedThrough(goal,today),0), actualToToday=PLAN.reduce((sum,[goal])=>sum+actualThrough(goal,today),0), overallPace=paceStatus(actualToToday,plannedToToday), overallRatio=plannedToToday?actualToToday/plannedToToday:0;
+  const today=iso(new Date()), passedPayments=rows.filter(row=>row.date<=today).length;
+  const metrics=[
+    {kind:"payments",icon:"↓",label:"Денежные поступления",value:`${passedPayments} / ${rows.length}`,detail:"выплат уже по календарю",progress:rows.length?passedPayments/rows.length*100:0,left:"Пройдено",right:`${passedPayments} из ${rows.length}`},
+    {kind:"earned",icon:"₽",label:"Фактически отложено",value:euro(totalActualAll),detail:`${pct.toFixed(1)}% от общей цели`,progress:pct,left:"Накоплено",right:euro(totalPlanned)},
+    {kind:"remaining",icon:"◎",label:"Осталось накопить",value:euro(Math.max(0,totalPlanned-totalActualAll)),detail:"до финансовой цели периода",progress:pct,left:"Общий прогресс",right:`${pct.toFixed(1)}%`}
+  ];
+  document.getElementById("metrics").innerHTML=metrics.map(item=>`<div class="metric metric-${item.kind}"><div class="metric-top"><span class="metric-icon">${item.icon}</span><span>${item.label}</span></div><div class="metric-value">${item.value}</div><div class="metric-detail">${item.detail}</div><div class="metric-progress"><span style="width:${item.progress}%"></span></div><div class="metric-meta"><span>${item.left}</span><b>${item.right}</b></div></div>`).join("");
+  const plannedToToday=PLAN.reduce((sum,[goal])=>sum+plannedThrough(goal,today),0), actualToToday=PLAN.reduce((sum,[goal])=>sum+actualThrough(goal,today),0), overallPace=paceStatus(actualToToday,plannedToToday), overallRatio=plannedToToday?actualToToday/plannedToToday:0;
   document.getElementById("runRate").innerHTML=`<div class="run-rate"><div class="run-rate-icon">↗</div><div><div class="run-rate-label">RUN RATE · темп по наступившим выплатам</div><div class="run-rate-title ${overallPace.className}">${overallPace.label}</div><div class="run-rate-copy">Подтверждено ${euro(actualToToday)} из ${euro(plannedToToday)} к сегодняшнему дню</div></div><div class="run-rate-value ${overallPace.className}">${plannedToToday?Math.round(overallRatio*100)+"%":"—"}<small>${plannedToToday?"от текущего плана":"первая выплата ещё впереди"}</small></div></div>`;
   document.getElementById("goals").innerHTML=PLAN.map(([g])=>{
     const p=totalPlannedFor(g), a=totalActual(g), q=p?Math.min(100,a/p*100):0, plannedNow=plannedThrough(g,today), actualNow=actualThrough(g,today), pace=paceStatus(actualNow,plannedNow), marker=p?Math.min(100,plannedNow/p*100):0;
@@ -179,13 +307,19 @@ function render(){
   const allocation=document.getElementById("allocation");
   if(!selected){allocation.innerHTML="<p class=\"muted\">В выбранном периоде нет выплат.</p>";return}
   const total=PLAN.reduce((sum,[g])=>sum+(+actual[key(selected.date,g)]||0),0), target=plannedForPayment(selected), status=paymentStatus(selected.date,total), isClosed=Boolean(closed[selected.date]);
-  allocation.innerHTML=`<div class="allocation-head"><div><h3>${dateRu(selected.date)}</h3><p>Распределение одной выплаты</p></div><div class="allocation-actions"><div class="allocation-total">Отложено<b class="${status.className}">${euro(total)} / ${euro(target)}</b></div><button class="secondary" id="toggleClosed">${isClosed?'Вернуть в работу':'Закрыть выплату'}</button></div></div><table class="allocation-table"><thead><tr><th>Направление</th><th>План</th><th>Факт</th></tr></thead><tbody>${PLAN.map(([g])=>{const planned=plannedFor(g,selected.nominal),confirmed=Boolean(actual[key(selected.date,g)]);return `<tr><td>${g}</td><td class="muted">${euro(planned)}</td><td><input class="actual ${confirmed?'confirmed':'pending'}" type="number" min="0" step="1" data-date="${selected.date}" data-goal="${g}" value="${actual[key(selected.date,g)] || planned}" aria-label="Фактическая сумма: ${g}"></td></tr>`}).join("")}</tbody></table>`;
+  if(preserveAllocation){
+    const totalLabel=allocation.querySelector(".allocation-total b");
+    if(totalLabel){totalLabel.textContent=`${euro(total)} / ${euro(target)}`;totalLabel.className=status.className}
+    return;
+  }
+  allocation.innerHTML=`<div class="allocation-head"><div><h3>${dateRu(selected.date)}</h3><p>Распределение одной выплаты</p></div><div class="allocation-actions"><div class="allocation-total">Отложено<b class="${status.className}">${euro(total)} / ${euro(target)}</b></div><button class="secondary" id="toggleClosed">${isClosed?'Вернуть в работу':'Закрыть выплату'}</button></div></div><table class="allocation-table"><thead><tr><th>Направление</th><th>План</th><th>Факт</th></tr></thead><tbody>${PLAN.map(([g])=>{const planned=plannedFor(g,selected.nominal),confirmed=Object.hasOwn(actual,key(selected.date,g));return `<tr><td>${g}</td><td class="muted">${euro(planned)}</td><td><input class="actual ${confirmed?'confirmed':'pending'}" type="number" min="0" step="1" data-date="${selected.date}" data-goal="${g}" value="${actual[key(selected.date,g)] ?? planned}" aria-label="Фактическая сумма: ${g}"></td></tr>`}).join("")}</tbody></table>`;
   document.getElementById("toggleClosed").onclick=()=>{
     if(isClosed) delete closed[selected.date]; else closed[selected.date]=true;
     localStorage.setItem("financeTrackerClosed",JSON.stringify(closed)); render();
   };
   allocation.querySelectorAll("input").forEach(inp=>inp.addEventListener("input",()=>{
-    inp.classList.remove("confirmed");inp.classList.add("pending");
+    saveActual(inp.dataset.date,inp.dataset.goal,inp.value);
+    renderPreservingInput();
   }));
   allocation.querySelectorAll("input").forEach(inp=>inp.addEventListener("focus",()=>inp.select()));
   allocation.querySelectorAll("input").forEach((inp,index,inputs)=>inp.addEventListener("keydown",e=>{
@@ -221,12 +355,12 @@ function restoreCSV(file){
         if(!importedStart && startColumn>=0 && /^\d{4}-\d{2}-\d{2}$/.test(cells[startColumn])) importedStart=cells[startColumn];
         PLAN.forEach(([goal],index)=>{
           const value=Number((cells[goalColumns[index]]||"").replace(",","."));
-          if(Number.isFinite(value) && value>0) importedActual[key(date,goal)]=value;
+          if(Number.isFinite(value) && value>=0) importedActual[key(date,goal)]=value;
         });
         if(statusColumn>=0 && cells[statusColumn]==="closed") importedClosed[date]=true;
       });
       if(!confirm("Заменить текущие данные данными из выбранного CSV-файла?")) return;
-      actual=importedActual; closed=importedClosed;
+      replaceActual(importedActual); closed=importedClosed;
       if(importedStart) startDate.value=importedStart;
       localStorage.setItem("financeTrackerActual",JSON.stringify(actual));
       localStorage.setItem("financeTrackerClosed",JSON.stringify(closed));
@@ -238,8 +372,11 @@ function restoreCSV(file){
 }
 const startDate=document.getElementById("startDate");
 startDate.value=iso(new Date());
-actual=JSON.parse(localStorage.getItem("financeTrackerActual")||"{}");
-closed=JSON.parse(localStorage.getItem("financeTrackerClosed")||"{}");
+const syncCache=readCache(SYNC_CACHE_KEY,null);
+actual=syncCache?.actual??readCache("financeTrackerActual",{});
+pending=syncCache?.pending??{};
+closed=readCache("financeTrackerClosed",{});
+startDate.value=readCache("financeTrackerStart",startDate.value);
 document.getElementById("rebuild").onclick=build;
 document.getElementById("save").onclick=e=>{
   document.querySelectorAll("#allocation input").forEach(inp=>saveActual(inp.dataset.date,inp.dataset.goal,inp.value));
@@ -252,8 +389,15 @@ document.getElementById("save").onclick=e=>{
 document.getElementById("export").onclick=exportCSV;
 document.getElementById("restoreCsv").onclick=()=>document.getElementById("importCsv").click();
 document.getElementById("importCsv").onchange=e=>{const file=e.target.files[0];if(file) restoreCSV(file);e.target.value=""};
-document.getElementById("reset").onclick=()=>{if(confirm("Удалить все фактические суммы и статусы выплат?")){actual={};closed={};localStorage.removeItem("financeTrackerActual");localStorage.removeItem("financeTrackerClosed");render()}};
+document.getElementById("reset").onclick=()=>{if(confirm("Удалить все фактические суммы и статусы выплат?")){replaceActual({});closed={};localStorage.removeItem("financeTrackerClosed");render()}};
 build();
+// Existing browser-only values have never been acknowledged by Sheets.
+if(!syncCache) replaceActual({...actual});
+document.getElementById('sync').onclick=synchronize;
+window.addEventListener('online',synchronize);
+window.addEventListener('offline',()=>setSyncStatus('offline','Нет подключения — сохранено локально'));
+setInterval(()=>{if(navigator.onLine && Object.keys(pending).length) syncPendingEntries()},30000);
+synchronize();
 </script>
 </body>
 </html>
