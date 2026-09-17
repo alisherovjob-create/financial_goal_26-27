@@ -37,7 +37,9 @@ h1{margin:0 0 8px;font-size:clamp(26px,4vw,42px)} h2{margin:0 0 12px;font-size:2
     </div>
   </div>
 
-  <div class="controls" style="margin-bottom:18px"><button class="secondary" id="sync">Синхронизировать</button><span class="sync-status" id="syncStatus" role="status" aria-live="polite">Загрузка данных…</span></div>
+  <div class="controls" style="margin-bottom:18px"><button class="secondary" id="sync" title="Загрузить суммы из Google Sheets и повторить отправку локальных изменений">Синхронизировать</button><span class="sync-status" id="syncStatus" role="status" aria-live="polite">Загрузка данных…</span></div>
+
+  <p class="note" style="margin-bottom:18px">Изменения отправляются автоматически после окончания ввода. «Синхронизировать» загружает суммы из Google Sheets и повторяет отправку несохранённых изменений.</p>
 
   <section class="grid" id="metrics"></section>
 
@@ -64,6 +66,8 @@ h1{margin:0 0 8px;font-size:clamp(26px,4vw,42px)} h2{margin:0 0 12px;font-size:2
 <script>
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxyXlfMsLI5Rtqs5pRAyI-jBSozz_n-5YHSTcrkU-KpD9yapOXZPlHC12Tip6o6TkC5/exec';
 const SYNC_CACHE_KEY = 'financeTrackerSyncV1', SAVE_DELAY = 850;
+// Sheets currently serializes midnight Moscow time as the previous UTC day.
+const SHEET_TIME_ZONE = 'Europe/Moscow';
 let pending = {}, syncTimer, saving = null, loading = null, storageFailed = false;
 function setSyncStatus(status, message){
   const el=document.getElementById('syncStatus');
@@ -86,9 +90,12 @@ function scheduleSync(delay=SAVE_DELAY){
   clearTimeout(syncTimer);
   syncTimer=setTimeout(()=>syncPendingEntries(),delay);
 }
-function queueEntry(date,category,value,planned){
+function queueEntry(date,category,value,planned,force=false){
   const id=key(date,category), amount=Number(value);
-  actual[id]=Number.isFinite(amount)?Math.max(0,amount):0;
+  const normalized=Number.isFinite(amount)?Math.max(0,amount):0;
+  // Enter and the browser-save button may confirm an already saved value.
+  if(!force && Object.hasOwn(actual,id) && actual[id]===normalized) return;
+  actual[id]=normalized;
   pending[id]={date,category,planned,actual:actual[id],revision:Date.now()+":"+Math.random(),due:Date.now()+SAVE_DELAY};
   persistCache();
   setSyncStatus(navigator.onLine?'saving':'offline',navigator.onLine?'Сохраняется…':'Нет подключения — сохранено локально');
@@ -98,14 +105,16 @@ async function requestCloud(options={}){
   const controller=new AbortController(), timeout=setTimeout(()=>controller.abort(),20000);
   try{
     const response=await fetch(APPS_SCRIPT_URL,{...options,signal:controller.signal,redirect:'follow'});
-    const data=await response.json();
-    if(!response.ok || data.ok!==true) throw new Error('API rejected request');
+    if(!response.ok) throw new Error(`Google Sheets: HTTP ${response.status}`);
+    let data;
+    try{data=await response.json()}catch(error){throw new Error('Google вернул не JSON. Проверьте доступ к веб-приложению Apps Script.')}
+    if(data?.ok!==true) throw new Error('Google Sheets не подтвердил запрос');
     return data;
   }finally{clearTimeout(timeout)}
 }
 function reportSyncError(error){
   const offline=!navigator.onLine || error instanceof TypeError || error.name==='AbortError';
-  setSyncStatus(offline?'offline':'error',offline?'Нет подключения — сохранено локально':'Ошибка синхронизации');
+  setSyncStatus(offline?'offline':'error',offline?'Нет подключения — сохранено локально':`Ошибка синхронизации: ${error.message}`);
 }
 async function saveCloudEntry(entry){
   const {date,category,planned,actual}=entry;
@@ -115,7 +124,8 @@ function syncPendingEntries(){
   if(saving) return saving;
   if(loading) return loading.then(()=>syncPendingEntries());
   if(!navigator.onLine){setSyncStatus('offline','Нет подключения — сохранено локально');return Promise.resolve()}
-  saving=(async()=>{
+  // Defer the worker so even an empty/not-yet-due queue clears the assigned promise.
+  saving=Promise.resolve().then(async()=>{
     try{
       // Serialize requests. An acknowledgement clears only the exact version sent.
       while(true){
@@ -130,8 +140,22 @@ function syncPendingEntries(){
       else setSyncStatus('saved','Сохранено ✓');
     }catch(error){reportSyncError(error);scheduleSync(15000)}
     finally{saving=null}
-  })();
+  });
   return saving;
+}
+function normalizeCloudEntry(entry){
+  let date=entry?.Date;
+  if(typeof date==='string' && /^\d{4}-\d{2}-\d{2}T/.test(date)){
+    const parsed=new Date(date);
+    if(!Number.isFinite(parsed.getTime())) throw new Error('Некорректная дата в Google Sheets');
+    const parts=new Intl.DateTimeFormat('en-US',{timeZone:SHEET_TIME_ZONE,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(parsed);
+    const part=type=>parts.find(item=>item.type===type).value;
+    date=`${part('year')}-${part('month')}-${part('day')}`;
+  }
+  if(typeof date!=='string' || !/^\d{4}-\d{2}-\d{2}$/.test(date) || typeof entry.Category!=='string' || typeof entry.Actual!=='number' || !Number.isFinite(entry.Actual) || entry.Actual<0){
+    throw new Error('Некорректный формат записи в Google Sheets');
+  }
+  return {...entry,Date:date,updated:Date.parse(entry.UpdatedAt)||0};
 }
 function loadCloudEntries(){
   if(loading) return loading;
@@ -142,13 +166,14 @@ function loadCloudEntries(){
       setSyncStatus('loading','Загрузка данных…');
       const data=await requestCloud({cache:'no-store'});
       if(!Array.isArray(data.entries)) throw new Error('Invalid entries');
-      // Validate before applying anything, including rows outside the visible period.
-      const entries=data.entries.map(entry=>{
-        if(!/^\d{4}-\d{2}-\d{2}$/.test(entry.Date) || typeof entry.Category!=='string' || typeof entry.Actual!=='number' || !Number.isFinite(entry.Actual) || entry.Actual<0) throw new Error('Invalid entry');
-        return entry;
+      // Normalize all rows before applying; choose the latest duplicate deterministically.
+      const latest=new Map();
+      data.entries.forEach(entry=>{
+        const normalized=normalizeCloudEntry(entry), id=key(normalized.Date,normalized.Category);
+        const previous=latest.get(id);
+        if(!previous || normalized.updated>=previous.updated) latest.set(id,normalized);
       });
-      entries.forEach(entry=>{
-        const id=key(entry.Date,entry.Category);
+      latest.forEach((entry,id)=>{
         if(!pending[id]) actual[id]=entry.Actual;
       });
       persistCache();
@@ -174,14 +199,14 @@ function renderPreservingInput(){
     input.classList.toggle('confirmed',Object.hasOwn(actual,id));
   });
 }
-function replaceActual(next){
+function replaceActual(next,force=false){
   // Explicit zeroes prevent reset/import values from returning on the next GET.
   const ids=new Set([...Object.keys(actual),...Object.keys(next)]);
   for(const id of ids){
     const split=id.indexOf('|'), date=id.slice(0,split), category=id.slice(split+1);
     if(!PLAN.some(([goal])=>goal===category)) continue;
     const row=rows.find(row=>row.date===date);
-    queueEntry(date,category,next[id]??0,pending[id]?.planned??plannedFor(category,row?.nominal||date));
+    queueEntry(date,category,next[id]??0,pending[id]?.planned??plannedFor(category,row?.nominal||date),force);
   }
 }
 
@@ -392,7 +417,7 @@ document.getElementById("importCsv").onchange=e=>{const file=e.target.files[0];i
 document.getElementById("reset").onclick=()=>{if(confirm("Удалить все фактические суммы и статусы выплат?")){replaceActual({});closed={};localStorage.removeItem("financeTrackerClosed");render()}};
 build();
 // Existing browser-only values have never been acknowledged by Sheets.
-if(!syncCache) replaceActual({...actual});
+if(!syncCache) replaceActual({...actual},true);
 document.getElementById('sync').onclick=synchronize;
 window.addEventListener('online',synchronize);
 window.addEventListener('offline',()=>setSyncStatus('offline','Нет подключения — сохранено локально'));

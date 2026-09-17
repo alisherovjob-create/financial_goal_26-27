@@ -3,14 +3,18 @@ import json
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
-HTML = Path(__file__).resolve().parents[1] / 'financial_tracker_365.html'
+HTML = Path(__file__).resolve().parents[1] / 'index.html'
 with sync_playwright() as p:
     browser = p.chromium.launch(channel='chrome', headless=True)
     context = browser.new_context()
     page = context.new_page()
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
-    cloud = []
+    cloud = [
+        {'Date':'2026-09-24T21:00:00.000Z','Category':'Быт','Planned':34300,'Actual':100,'UpdatedAt':'2026-09-17T10:00:00Z'},
+        {'Date':'2026-09-24T21:00:00.000Z','Category':'Быт','Planned':34300,'Actual':200,'UpdatedAt':'2026-09-17T11:00:00Z'},
+        {'Date':'2026-09-24T21:00:00.000Z','Category':'Быт','Planned':34300,'Actual':50,'UpdatedAt':'2026-09-17T09:00:00Z'},
+    ]
     posts = []
     mode = {'value': 'ok'}
     held = []
@@ -37,11 +41,21 @@ with sync_playwright() as p:
     context.route('https://script.google.com/**', api)
     context.route('http://tracker.test/', lambda route: route.fulfill(path=str(HTML), content_type='text/html'))
     page.goto('http://tracker.test/')
+    page.wait_for_timeout(300)
+    assert page.locator('#syncStatus').get_attribute('data-status') == 'saved', 'Timestamp dates must load in a fresh browser'
+    assert page.evaluate("actual['2026-09-25|Быт']") == 200, 'Duplicates must use newest UpdatedAt, not row order'
+    page.evaluate("startDate.value='2026-09-18'; build(); selectedDate='2026-09-25'; render()")
     field = page.locator('#allocation input').first
+    assert field.input_value() == '200'
+    cloud.clear()
     field.fill('1234')
     page.wait_for_timeout(1100)
     assert posts and posts[-1]['actual'] == 1234, f'Input must automatically POST after debounce: {errors}'
     assert '1234' in page.evaluate("localStorage.getItem('financeTrackerActual')")
+    before = len(posts)
+    field.press('Enter')
+    page.wait_for_timeout(1100)
+    assert len(posts) == before, 'Enter on an acknowledged value must not send it again'
     page.reload()
     page.wait_for_timeout(300)
     assert field.input_value() == '1234', 'Reload must load cloud value'
@@ -87,10 +101,10 @@ with sync_playwright() as p:
     page.wait_for_timeout(1100)
     assert len(posts) == before + 1, 'Keystrokes must be debounced'
     # HTTP errors and non-JSON replies must not acknowledge queued data.
-    for bad_response in [{'status':500,'json':{'ok':True}}, {'status':200,'body':'<html>Login</html>'}]:
+    for index, bad_response in enumerate([{'status':500,'json':{'ok':True}}, {'status':200,'body':'<html>Login</html>'}]):
         context.unroute('https://script.google.com/**', api)
         context.route('https://script.google.com/**', lambda route: route.fulfill(**bad_response))
-        field.fill('444')
+        field.fill(str(443+index))
         page.wait_for_timeout(1100)
         assert page.locator('#syncStatus').get_attribute('data-status') == 'error'
         snapshot = json.loads(page.evaluate("localStorage.getItem('financeTrackerSyncV1')"))
@@ -115,4 +129,17 @@ with sync_playwright() as p:
     assert any(e['Actual'] == 444 for e in cloud)
     assert not errors, errors
     print('PASS: debounce, POST, GET, reload, empty/zero, offline durability, merge protection, rejection, retry, in-flight edits, typing, HTTP/JSON errors, CSV and reset; no JS errors')
+    legacy = browser.new_context()
+    legacy.route('https://script.google.com/**', api)
+    legacy.route('http://tracker.test/', lambda route: route.fulfill(path=str(HTML), content_type='text/html'))
+    legacy.add_init_script("localStorage.setItem('financeTrackerActual',JSON.stringify({'2026-09-25|Быт':999}))")
+    legacy_page=legacy.new_page()
+    before=len(posts)
+    legacy_page.goto('http://tracker.test/')
+    legacy_page.wait_for_function("Object.keys(pending).length===0", timeout=15000)
+    assert any(e['actual']==999 for e in posts[before:]), 'Legacy browser-only values must still migrate to Sheets'
+    print('PASS: legacy cache migration')
+    source=(HTML.parent/'apps-script/Sync.gs').read_text()
+    harness=(HTML.parent/'tests/apps_script_harness.js').read_text()
+    print(page.evaluate('(source) => new Function(source)()', source+'\n'+harness))
     browser.close()
