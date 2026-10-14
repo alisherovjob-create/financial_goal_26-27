@@ -64,7 +64,6 @@
       if(!Number.isSafeInteger(amount)||amount<=0||!comment){message.textContent='Введите сумму в целых рублях больше нуля и комментарий';return;}
       const prior=attempts[category];
       if(prior && (prior.amount!==amount||prior.comment!==comment)){message.textContent='Сначала повторите сохранение предыдущего расхода с исходными значениями: '+euro(prior.amount)+' — '+prior.comment;return;}
-      if(!prior && amount>totalActual(category)-spent(category)){message.textContent='Сумма расхода превышает доступный остаток';return;}
       if(!ready){message.textContent='Сначала синхронизируйте расходы с Google Таблицей';return;}
       if(Object.keys(pending).length){message.textContent='Дождитесь сохранения накоплений на основной вкладке';return;}
       busy=true;button.disabled=true;message.textContent='Сохраняется…';
@@ -77,7 +76,6 @@
         message.textContent='Расход сохранён ✓';
         try{persist()}catch(_){message.textContent='Расход сохранён в таблице; локальный кэш недоступен';}
       }catch(error){
-        if(error.code==='INSUFFICIENT_BALANCE'){delete attempts[category];try{persist()}catch(_){};sync();}
         message.textContent='Не удалось сохранить расход: '+error.message+'. Повторите отправку.';
       }
       finally{busy=false;button.disabled=false;}

@@ -44,9 +44,13 @@ with sync_playwright() as p:
     form.locator('[name=amount]').fill('44000')
     form.locator('[name=comment]').fill('Сверх остатка')
     form.locator('button').click()
-    assert 'Сумма расхода превышает доступный остаток' in form.inner_text()
-    assert len(posts)==1
+    page.wait_for_timeout(300)
+    assert len(posts)==2, 'Expense above balance must be saved'
+    assert card.locator('[data-balance]').inner_text().replace('−','-').startswith('-1'), 'Balance must be negative'
+    assert card.locator('[data-balance]').get_attribute('class')=='bad'
+    assert page.evaluate("totalActual('Быт')")==50000
     mode['fail']=True
+    form.locator('[name=comment]').fill('Расход при отрицательном остатке')
     form.locator('[name=amount]').fill('1000')
     form.locator('button').click()
     page.wait_for_timeout(300)
@@ -58,7 +62,7 @@ with sync_playwright() as p:
     page.reload()
     page.locator('#expensesTab').click()
     page.wait_for_timeout(300)
-    assert page.locator('.expense-card').first.locator('.expense-history li').count()==2
+    assert page.locator('.expense-card').first.locator('.expense-history li').count()==3
     page.set_viewport_size({'width':375,'height':812})
     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
     assert not errors,errors

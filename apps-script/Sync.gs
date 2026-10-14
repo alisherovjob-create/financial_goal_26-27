@@ -160,14 +160,6 @@ function addExpense_(body) {
       }
       return json_({ok:true,expense:previous});
     }
-    const dates = new Set(body.dates);
-    const accumulated = Array.from(latestEntries_(entries_(getEntriesSheet_())).values())
-      .filter(e => e.Category === body.category && dates.has(e.Date))
-      .reduce((sum,e) => sum + e.Actual, 0);
-    const spent = history.filter(e => e.Category === body.category).reduce((sum,e) => sum + e.Amount, 0);
-    if (!Number.isFinite(accumulated) || body.amount > accumulated - spent) {
-      return json_({ok:false,code:'INSUFFICIENT_BALANCE',error:'Сумма расхода превышает доступный остаток'});
-    }
     if (!sheet) sheet = expensesSheet_(true);
     const created = new Date(), index = sheet.getLastRow() + 1;
     sheet.getRange(index, 1, 1, 2).setNumberFormat('@');
