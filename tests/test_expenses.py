@@ -32,6 +32,8 @@ with sync_playwright() as p:
     page.wait_for_timeout(300)
     card=page.locator('.expense-card').first
     assert page.locator('.expense-card').count()==11
+    assert not card.evaluate('(el)=>el.open'), 'Cards start collapsed'
+    card.locator('summary').click()
     form=card.locator('form')
     form.locator('[name=amount]').fill('7000')
     form.locator('[name=comment]').fill('<b>Покупка</b>')
@@ -39,6 +41,7 @@ with sync_playwright() as p:
     page.wait_for_timeout(300)
     assert '43' in card.locator('[data-balance]').inner_text(), (card.inner_text(),posts,errors)
     assert page.evaluate("totalActual('Быт')")==50000
+    assert card.locator('[data-balance]').evaluate('(el)=>getComputedStyle(el).color')=='rgb(101, 214, 165)'
     assert card.locator('.expense-history').inner_text().find('<b>Покупка</b>')>=0
     assert form.locator('[name=amount]').input_value()==''
     form.locator('[name=amount]').fill('44000')
@@ -48,6 +51,7 @@ with sync_playwright() as p:
     assert len(posts)==2, 'Expense above balance must be saved'
     assert card.locator('[data-balance]').inner_text().replace('−','-').startswith('-1'), 'Balance must be negative'
     assert card.locator('[data-balance]').get_attribute('class')=='bad'
+    assert card.locator('[data-balance]').evaluate('(el)=>getComputedStyle(el).color')=='rgb(255, 123, 139)'
     assert page.evaluate("totalActual('Быт')")==50000
     mode['fail']=True
     form.locator('[name=comment]').fill('Расход при отрицательном остатке')
@@ -64,6 +68,7 @@ with sync_playwright() as p:
     page.wait_for_timeout(300)
     assert page.locator('.expense-card').first.locator('.expense-history li').count()==3
     page.set_viewport_size({'width':375,'height':812})
+    card.locator('summary').click()
     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
     assert not errors,errors
     browser.close()

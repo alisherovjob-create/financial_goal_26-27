@@ -1,1 +1,47 @@
-[hidden]{display:none!important}.finance-tabs{margin-bottom:20px}.expense-totals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0;color:var(--muted);font-size:13px}.expense-totals strong{display:block;font-size:22px;color:var(--text);margin-top:5px}.expense-card form{display:flex;flex-wrap:wrap;gap:12px;align-items:end}.expense-card label{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:13px;flex:1 1 200px}.expense-card form p{flex-basis:100%;overflow-wrap:anywhere}.expense-card button:disabled{opacity:.6;cursor:wait}.expense-history ul{list-style:none;padding:0}.expense-history li{display:grid;grid-template-columns:1fr auto;gap:8px;padding:12px 0;border-top:1px solid var(--line)}.expense-history time{color:var(--muted);font-size:13px}.expense-history span{grid-column:1/-1;overflow-wrap:anywhere;white-space:pre-wrap}#expensesPanel>.controls{margin:18px 0} .expense-card h3{font-size:16px}@media(max-width:600px){#expensesPanel .expense-totals{grid-template-columns:1fr}#expensesPanel form{display:block}#expensesPanel label{margin-bottom:12px}#expensesPanel button{max-width:100%}#expensesPanel h2{overflow-wrap:anywhere}.finance-tabs button{flex:1} }
+[hidden]{display:none!important}
+.finance-tabs{margin-bottom:20px}
+#expensesPanel>.controls{margin:18px 0 24px}
+#expenseCards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start}
+#expensesPanel .expense-card{margin:0;padding:0;min-width:0;border-color:#334662;background:linear-gradient(145deg,#182740,#111c33);overflow:hidden;transition:border-color .2s,box-shadow .2s}
+#expensesPanel .expense-card:hover{border-color:#54729b;box-shadow:0 12px 30px #0003}
+#expensesPanel .expense-card[open]{grid-column:1/-1;border-color:var(--accent2)}
+.expense-card summary{padding:20px;cursor:pointer;list-style:none}
+.expense-card summary::-webkit-details-marker{display:none}
+.expense-card summary:focus-visible{outline:2px solid var(--accent2);outline-offset:-4px;border-radius:16px}
+.expense-heading{display:flex;flex-direction:column;gap:10px}
+#expensesPanel .expense-heading h2{margin:0;font-size:18px;line-height:1.4;overflow-wrap:anywhere}
+.expense-toggle{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.expense-chevron{margin-left:auto;font-size:22px;line-height:1;transition:transform .2s}
+.expense-hide{display:none}
+.expense-card[open] .expense-show{display:none}
+.expense-card[open] .expense-hide{display:inline}
+.expense-card[open] .expense-chevron{transform:rotate(180deg)}
+.expense-totals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0 0;color:var(--muted);font-size:12px}
+.expense-totals strong{display:block;font-size:18px;color:var(--text);margin-top:6px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.expense-balance{grid-column:1/-1;padding:16px;border:1px solid #40516b;border-radius:12px;background:#223149;color:#cbd8ea;font-weight:650}
+#expensesPanel .expense-balance strong{font-size:clamp(26px,3vw,34px);font-weight:850;letter-spacing:-.6px;line-height:1.2;margin-top:8px}
+#expensesPanel [data-balance].good{color:var(--accent)}
+#expensesPanel [data-balance].bad{color:var(--danger)}
+#expensesPanel [data-balance].muted{color:var(--muted)}
+.expense-card[data-balance="positive"] .expense-balance{border-color:#3b7363;background:linear-gradient(120deg,#193d36,#182f31)}
+.expense-card[data-balance="negative"] .expense-balance{border-color:#854452;background:linear-gradient(120deg,#462733,#2c2334)}
+.expense-card[open] .expense-totals{grid-template-columns:1fr 1fr 1.4fr;align-items:center}
+.expense-card[open] .expense-balance{grid-column:auto}
+.expense-body{padding:20px;border-top:1px solid var(--line);background:#0c172833}
+.expense-card form{display:flex;flex-wrap:wrap;gap:14px;align-items:end;padding:18px;background:var(--panel2);border:1px solid var(--line);border-radius:12px}
+.expense-card label{display:flex;flex-direction:column;gap:8px;color:var(--muted);font-size:13px;flex:1 1 200px}
+.expense-card input{width:100%;padding:12px}
+.expense-card input:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+.expense-card form p{flex-basis:100%;overflow-wrap:anywhere;margin:0}
+.expense-card form p:empty{display:none}
+.expense-card button{padding:12px 16px}
+.expense-card button:disabled{opacity:.6;cursor:wait}
+.expense-card h3{font-size:16px;margin:24px 0 12px}
+.expense-history ul{list-style:none;padding:0;margin:0}
+.expense-history li{display:grid;grid-template-columns:1fr auto;gap:8px;padding:14px 0;border-top:1px solid var(--line)}
+.expense-history time{color:var(--muted);font-size:12px}
+.expense-history strong{font-variant-numeric:tabular-nums}
+.expense-history span{grid-column:1/-1;overflow-wrap:anywhere;white-space:pre-wrap;line-height:1.5}
+@media(max-width:1100px){#expenseCards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){#expenseCards{grid-template-columns:1fr}.expense-card summary,.expense-body{padding:16px}.expense-card[open] .expense-totals{grid-template-columns:repeat(2,minmax(0,1fr))}.expense-card[open] .expense-balance{grid-column:1/-1}#expensesPanel form{display:block;padding:14px}#expensesPanel label{margin-bottom:14px}#expensesPanel form button{width:100%}#expensesPanel form p{margin-top:12px}.finance-tabs button{flex:1}.expense-history li{grid-template-columns:minmax(0,1fr) auto}}
+@media(prefers-reduced-motion:reduce){#expensesPanel .expense-card,.expense-chevron{transition:none}}

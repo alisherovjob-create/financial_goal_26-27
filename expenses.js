@@ -20,7 +20,8 @@
       const category=PLAN[i][0], total=totalActual(category), used=spent(category);
       card.querySelector('[data-total]').textContent=euro(total);
       card.querySelector('[data-spent]').textContent=euro(used);
-      const balance=card.querySelector('[data-balance]'); balance.textContent=euro(total-used); balance.className=total<used?'bad':'good';
+      const balance=card.querySelector('[data-balance]'); balance.textContent=euro(total-used); balance.className=total<used?'bad':total>used?'good':'muted';
+      card.dataset.balance=total<used?'negative':total>used?'positive':'zero';
       const history=expenses.filter(e=>e.Category===category).sort((a,b)=>Date.parse(b.CreatedAt)-Date.parse(a.CreatedAt));
       card.querySelector('.expense-history').innerHTML=history.length?'<ul>'+history.map(e=>`<li><time>${escape(new Date(e.CreatedAt).toLocaleString('ru-RU',{timeZone:SHEET_TIME_ZONE}))}</time><strong>${euro(e.Amount)}</strong><span>${escape(e.Comment)}</span></li>`).join('')+'</ul>':'<p>По этой статье пока нет расходов</p>';
     });
@@ -53,10 +54,10 @@
     })(); return loadingExpenses;
   }
   PLAN.forEach(([category])=>{
-    const card=document.createElement('article');card.className='panel expense-card';
-    card.innerHTML=`<h2>${escape(category)}</h2><div class="expense-totals"><div>Всего накоплено<strong data-total></strong></div><div>Всего потрачено<strong data-spent></strong></div><div>Доступный остаток<strong data-balance></strong></div></div><form><label>Сумма расхода<input name="amount" type="number" min="1" step="1" required></label><label>Цель расхода / комментарий<input name="comment" type="text" required maxlength="2000"></label><button>Добавить расход</button><p role="status" aria-live="polite"></p></form><h3>История расходов</h3><div class="expense-history"></div>`;
+    const card=document.createElement('details');card.className='panel expense-card';
+    card.innerHTML=`<summary><div class="expense-heading"><h2>${escape(category)}</h2><span class="expense-toggle"><span class="expense-show">Добавить расход · история</span><span class="expense-hide">Свернуть</span><span class="expense-chevron" aria-hidden="true">⌄</span></span></div><div class="expense-totals"><div>Всего накоплено<strong data-total></strong></div><div>Всего потрачено<strong data-spent></strong></div><div class="expense-balance">Доступный остаток<strong data-balance></strong></div></div></summary><div class="expense-body"><form><label>Сумма расхода<input name="amount" type="number" min="1" step="1" required></label><label>Цель расхода / комментарий<input name="comment" type="text" required maxlength="2000"></label><button>Добавить расход</button><p role="status" aria-live="polite"></p></form><h3>История расходов</h3><div class="expense-history"></div></div>`;
     const form=card.querySelector('form'), message=form.querySelector('[role=status]'), button=form.querySelector('button');
-    if(attempts[category]){form.elements.amount.value=attempts[category].amount;form.elements.comment.value=attempts[category].comment;}
+    if(attempts[category]){card.open=true;form.elements.amount.value=attempts[category].amount;form.elements.comment.value=attempts[category].comment;}
     let busy=false;
     form.addEventListener('submit',async event=>{
       event.preventDefault();if(busy)return;
