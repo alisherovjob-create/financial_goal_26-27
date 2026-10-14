@@ -44,6 +44,7 @@ with sync_playwright() as p:
     context.route('http://tracker.test/', lambda route: route.fulfill(path=str(HTML), content_type='text/html'))
     context.route('http://tracker.test/expenses.js', lambda route: route.fulfill(path=str(HTML.parent / 'expenses.js'), content_type='text/javascript'))
     context.route('http://tracker.test/expenses.css', lambda route: route.fulfill(path=str(HTML.parent / 'expenses.css'), content_type='text/css'))
+    context.route('http://tracker.test/design.css', lambda route: route.fulfill(path=str(HTML.parent / 'design.css'), content_type='text/css'))
     page.goto('http://tracker.test/')
     page.wait_for_timeout(300)
     assert page.locator('#syncStatus').get_attribute('data-status') == 'saved', 'Timestamp dates must load in a fresh browser'

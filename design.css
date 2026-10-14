@@ -1,0 +1,131 @@
+/* Shared visual language. Calculations and persistence remain in the original scripts. */
+:root{--bg:#f6f5ef;--panel:#fffefa;--panel2:#f1f2ec;--line:#dedfd5;--text:#202c28;--muted:#69756d;--accent:#187354;--accent2:#23694f;--warn:#98651c;--danger:#b94343}
+body{background:var(--bg);color:var(--text);font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+::selection{background:#cce8bc;color:#15392c}
+button,input,select{transition:background .18s,border-color .18s,box-shadow .18s}
+button{background:#205b43;color:#fffefa;font-weight:650;font-size:13px;border:1px solid transparent;border-radius:8px;padding:11px 16px;line-height:1.4}
+button:hover{background:#174b36}
+button.secondary{background:#fffefa;border-color:var(--line);color:var(--text)}
+button.secondary:hover{background:#ecefe6;border-color:#adb9a9}
+button.danger{background:#f6e9e5;color:#9b3939;border-color:#ecd6d1}
+button.danger:hover{background:#efd9d2}
+button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+input,select{background:#fffefa;border:1px solid #cdd3c7;color:var(--text);border-radius:7px;padding:10px 12px;color-scheme:light}
+input:focus-visible,select:focus-visible{outline:2px solid #9dc6a5;outline-offset:2px}
+.wrap{max-width:1400px;padding:0 48px 64px}
+.finance-tabs{padding:22px 0 0;margin-bottom:38px;gap:5px}
+.finance-tabs button,.finance-tabs button.secondary{background:transparent;color:var(--muted);border:0;border-radius:0;border-bottom:2px solid transparent;padding:10px 4px;margin-right:24px;font-size:13px}
+.finance-tabs button[aria-pressed="true"]{color:var(--text);border-bottom-color:var(--accent);font-weight:750}
+.finance-tabs button:hover{color:var(--accent)}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-2.8px;font-size:clamp(44px,5.4vw,76px);line-height:1.08;color:#213b2d;margin:16px 0 20px}
+h2{font-weight:550;letter-spacing:-.5px;font-size:23px;line-height:1.3}
+p{line-height:1.65;color:var(--muted)}
+.hero{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:end;margin-bottom:28px}
+.hero>div:first-child>p{max-width:540px;font-size:14px}
+.badge{border:0;border-radius:0;padding:0;background:transparent;color:var(--accent);font-size:10px;letter-spacing:2px;font-weight:700;text-transform:uppercase}
+.badge::before{content:"";display:inline-block;width:6px;height:6px;background:var(--accent);border-radius:50%;margin-right:9px;vertical-align:middle}
+.hero>.controls{padding:24px;border:1px solid var(--line);border-radius:12px;background:#eeefe7;gap:9px}
+.hero>.controls label{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:1 1 100%;font-size:12px;margin-bottom:4px}
+.hero>.controls input{min-width:160px}
+.hero>.controls button{flex:1 1 auto;font-size:11px;padding:9px 11px}
+#savingsPanel>.controls{gap:12px;font-size:12px}
+#savingsPanel>.note{max-width:780px;font-size:11px;margin-top:-6px}
+.sync-status{font-size:12px}
+#metrics{gap:18px;margin:28px 0 22px}
+.metric{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:25px;min-height:240px;box-shadow:none}
+.metric::after{display:none}
+.metric-top{color:var(--muted);font-size:12px;font-weight:550;gap:10px}
+.metric .metric-icon{background:#eef1e7;color:var(--accent);border-radius:50%;width:30px;height:30px;font-weight:500}
+.metric-value{font-size:clamp(29px,3.4vw,46px);letter-spacing:-1.7px;margin:20px 0 5px;font-weight:550;line-height:1.15;font-variant-numeric:tabular-nums}
+.metric-detail{font-size:11px;margin-bottom:22px}
+.metric-progress{height:3px;background:#e5e9de}
+.metric .metric-progress span{background:#7b9c6b;box-shadow:none}
+.metric-meta{color:var(--muted);font-size:10px;margin-top:10px}
+.metric-meta b{color:var(--text);font-weight:550}
+.metric-earned{background:#204b37;border-color:#204b37;color:#fffefa;order:-1;position:relative}
+.metric-earned::before{content:"";position:absolute;right:-50px;top:-80px;width:240px;height:240px;border:1px solid #ffffff12;border-radius:50%;box-shadow:0 0 0 30px #ffffff04,0 0 0 65px #ffffff03;pointer-events:none}
+.metric-earned .metric-top,.metric-earned .metric-detail,.metric-earned .metric-meta{color:#c0d1bd}
+.metric-earned .metric-meta b{color:#f3f7e7}
+.metric-earned .metric-icon{background:#ffffff12;color:#d8ebb6}
+.metric-earned .metric-progress{background:#ffffff20}
+.metric-earned .metric-progress span{background:#c3dda6}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:28px;box-shadow:none;margin-bottom:24px}
+#runRate{background:#e9eddf;border-color:#d8e0cc;padding:0}
+.run-rate{background:transparent;border:0;border-radius:13px;padding:22px 26px;gap:18px}
+.run-rate-icon{background:#dde6cd;color:#3d6339;border-radius:50%;width:44px;height:44px}
+.run-rate-label{font-size:10px;letter-spacing:1px}
+.run-rate-title{font-size:18px;font-weight:650}
+.run-rate-copy,.run-rate-value small{font-size:11px}
+.run-rate-value{font-weight:500;font-size:30px;letter-spacing:-1px}
+#savingsPanel>.panel:has(#goals){padding:30px 0 8px;background:transparent;border:0}
+#savingsPanel>.panel:has(#goals)>h2{font-family:Georgia,serif;font-size:30px;margin-bottom:22px;font-weight:400}
+.goal-grid{gap:14px}
+.goal{background:var(--panel);border-color:var(--line);border-radius:10px;padding:20px;box-shadow:none;min-width:0}
+.goal.pace-good,.goal.pace-bad,.goal.pace-warn,.goal.pace-partial{border-color:var(--line)}
+.goal-head{font-size:12px;align-items:start;gap:12px;font-weight:650;min-height:35px}
+.goal-head>span:first-child{overflow-wrap:anywhere}
+.pace-badge{font-size:9px;padding:3px 6px;font-weight:550;background:#edf0e6;color:#62715c}
+.pace-good .pace-badge{background:#e4efdc;color:#346238}
+.pace-bad .pace-badge{background:#f5e5df;color:#a54837}
+.pace-warn .pace-badge,.pace-partial .pace-badge{background:#f4ecd5;color:#86641e}
+.goal .numbers{font-size:12px;margin-top:12px}
+.goal-track{height:4px;background:#e7eadf;margin-top:17px}
+.goal-track .bar{background:#64895b}
+.pace-line{background:#71846b;width:1px}
+.pace-numbers{font-size:9px;margin-top:12px;gap:12px}
+.pace-numbers b{color:#485b42;font-weight:550}
+#savingsPanel>.panel:has(.payday-layout)>h2{font-family:Georgia,serif;font-size:30px;font-weight:400}
+.note{font-size:11px;line-height:1.7}
+.payday-layout{grid-template-columns:minmax(240px,.7fr) minmax(0,1.3fr);gap:25px;height:640px;margin-top:24px}
+.payday-item{background:#fafbf5;border-color:#e4e7db;border-radius:9px;padding:15px;font-weight:400;gap:7px}
+.payday-item:hover,.payday-item.selected{background:#e9efdf;border-color:#95ae83}
+.payday-item .date{font-size:13px;font-weight:650}
+.payday-item .details,.payday-item .amount,.payday-item .status{font-size:10px}
+.payday-item .amount b{font-size:13px;font-weight:550}
+.allocation{background:#f6f7f0;border-color:#e0e5d6;border-radius:10px;padding:23px}
+.allocation-head h3{font-family:Georgia,serif;font-weight:400;font-size:26px}
+.allocation-head p{font-size:11px}
+.allocation-total{font-size:10px}
+.allocation-total b{font-size:15px;font-weight:550}
+.allocation-table{font-size:12px}
+.allocation-table th,.allocation-table td{padding:12px 4px;border-bottom-color:#e0e5d7}
+.allocation-table th{font-size:10px}
+.actual{background:#fffefa;border-color:#bccdb0;color:var(--text);box-shadow:none;width:115px;padding:10px;font-size:13px;font-weight:650}
+.actual.pending{background:#f0f2e9;color:#7e8b72;border-color:#c9d1bd}
+.actual:hover{border-color:#72955b}
+.actual:focus{border-color:#527e3d;box-shadow:0 0 0 3px #5f89331a}
+.footer{border-top:1px solid var(--line);margin-top:20px;padding-top:15px;font-size:10px}
+#savingsPanel>.panel:last-child{background:transparent;padding:24px 0;border:0}
+#savingsPanel>.panel:last-child h2{font-size:16px}
+#expensesPanel>h1{font-size:clamp(40px,5vw,64px);margin-top:0;margin-bottom:16px}
+#expensesPanel>p{font-size:14px;max-width:650px}
+#expensesPanel>.controls{margin:24px 0 30px}
+#expenseCards{gap:18px}
+#expensesPanel .expense-card{background:var(--panel);border-color:var(--line);border-radius:12px;box-shadow:none}
+#expensesPanel .expense-card:hover{border-color:#9caf8e;box-shadow:0 6px 24px #233b2510}
+#expensesPanel .expense-card[open]{border-color:#91a980}
+.expense-card summary{padding:24px}
+#expensesPanel .expense-heading h2{font-size:16px;font-weight:600;letter-spacing:-.2px;min-height:45px}
+.expense-toggle{font-size:10px;letter-spacing:.1px;color:#73816b}
+.expense-chevron{width:24px;height:24px;background:#eff2e8;border-radius:50%;display:grid;place-items:center;font-size:18px;color:#5d7951}
+.expense-totals{gap:16px;font-size:10px;margin-top:20px}
+.expense-totals strong{font-size:17px;font-weight:500;letter-spacing:-.4px}
+.expense-balance{background:#f0f2e9;border-color:#e1e6d6;color:#697561;padding:17px;border-radius:9px;font-weight:500}
+#expensesPanel .expense-balance strong{font-size:34px;font-weight:550;letter-spacing:-1.2px}
+.expense-card[data-balance="positive"] .expense-balance{background:#edf3e5;border-color:#d7e6c7;color:#516a40}
+.expense-card[data-balance="negative"] .expense-balance{background:#fbefea;border-color:#ecd8d0;color:#8d5b50}
+.expense-body{background:#f7f8f2;border-color:var(--line);padding:24px}
+.expense-card form{background:#fffefa;border-color:var(--line);border-radius:9px;padding:20px;gap:18px}
+.expense-card label{font-size:11px}
+.expense-card input{font-size:14px;background:#fafbf5;border-color:#ced8c4}
+.expense-card h3{font-family:Georgia,serif;font-size:22px;font-weight:400}
+.expense-history li{border-color:var(--line);padding:17px 0}
+.expense-history time{font-size:11px}
+.expense-history strong{font-size:15px;font-weight:550}
+.expense-history span{font-size:13px}
+.expense-history>p{font-size:12px;border:1px dashed #ccd6c1;border-radius:8px;padding:20px;text-align:center}
+@media(min-width:1101px){.expense-card[open] .expense-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:36px}.expense-card[open] form{grid-row:1/3;align-self:start}.expense-card[open] h3{margin:0 0 14px}.expense-card[open] .expense-history{grid-column:2}}
+@media(max-width:1100px){.wrap{padding:0 30px 40px}.hero{gap:30px}.metric{padding:20px}.goal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.goal-head{min-height:30px}.payday-layout{grid-template-columns:minmax(210px,.7fr) minmax(0,1.3fr);gap:14px}.allocation{padding:15px}.allocation-head{flex-wrap:wrap}}
+@media(max-width:760px){.hero{grid-template-columns:1fr;gap:24px}.hero>.controls{padding:18px}.grid{grid-template-columns:1fr}.metric{min-height:205px}.metric-value{font-size:42px}.goal-grid{grid-template-columns:1fr}.payday-layout{grid-template-columns:1fr;height:auto}.payday-list{max-height:290px}.allocation{overflow:auto}.run-rate{grid-template-columns:auto minmax(0,1fr);padding:20px}.run-rate-value{grid-column:2;text-align:left;font-size:25px}.allocation-actions{align-items:start}.allocation-head{gap:15px}.allocation-table{min-width:345px}}
+@media(max-width:600px){.wrap{padding:0 20px 32px}.finance-tabs{margin-bottom:28px;padding-top:14px;gap:18px}.finance-tabs button{flex:none;margin-right:0;font-size:12px}.panel{padding:20px}.hero h1{font-size:48px;letter-spacing:-2px}.hero>div:first-child>p{font-size:13px}.hero>.controls label{flex-wrap:wrap}.hero>.controls label input{flex:1}.hero>.controls button{font-size:10px}.expense-card summary,.expense-body{padding:18px}#expensesPanel .expense-heading h2{min-height:0}#expensesPanel .expense-balance strong{font-size:32px}.expense-card form{padding:16px}#expensesPanel>h1{font-size:43px;letter-spacing:-2px}#expensesPanel>p{font-size:13px}#savingsPanel>.panel:has(.payday-layout)>h2{font-size:26px}.allocation{padding:12px}.allocation-table{min-width:320px}.allocation-table th,.allocation-table td{font-size:11px}.actual{width:90px}.pace-numbers{font-size:10px}.goal-head{font-size:13px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
