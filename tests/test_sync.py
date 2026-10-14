@@ -8,6 +8,8 @@ with sync_playwright() as p:
     browser = p.chromium.launch(channel='chrome', headless=True)
     context = browser.new_context()
     page = context.new_page()
+    # This fixture exercises September payments regardless of the actual date.
+    page.clock.install(time='2026-09-18T12:00:00Z')
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
     cloud = [
@@ -40,6 +42,8 @@ with sync_playwright() as p:
             route.fulfill(json={'ok':True,'entries':cloud})
     context.route('https://script.google.com/**', api)
     context.route('http://tracker.test/', lambda route: route.fulfill(path=str(HTML), content_type='text/html'))
+    context.route('http://tracker.test/expenses.js', lambda route: route.fulfill(path=str(HTML.parent / 'expenses.js'), content_type='text/javascript'))
+    context.route('http://tracker.test/expenses.css', lambda route: route.fulfill(path=str(HTML.parent / 'expenses.css'), content_type='text/css'))
     page.goto('http://tracker.test/')
     page.wait_for_timeout(300)
     assert page.locator('#syncStatus').get_attribute('data-status') == 'saved', 'Timestamp dates must load in a fresh browser'
@@ -58,7 +62,7 @@ with sync_playwright() as p:
     assert len(posts) == before, 'Enter on an acknowledged value must not send it again'
     page.reload()
     page.wait_for_timeout(300)
-    assert field.input_value() == '1234', 'Reload must load cloud value'
+    assert field.input_value() == '1234', ('Reload must load cloud value',field.input_value(),cloud,page.evaluate('({selectedDate,actual,pending})'),errors)
     field.fill('')
     page.wait_for_timeout(1100)
     assert posts[-1]['actual'] == 0

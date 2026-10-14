@@ -47,7 +47,8 @@ function latestEntries_(entries) {
   });
   return latest;
 }
-function doGet() {
+function doGet(e) {
+  if (e && e.parameter && e.parameter.action === "expenses") return getExpensesResponse_();
   const lock = LockService.getScriptLock();
   try {
     lock.waitLock(10000);
@@ -61,6 +62,7 @@ function doPost(e) {
   const lock = LockService.getScriptLock();
   try {
     const body = JSON.parse(e.postData.contents);
+    if (body.action === "addExpense") return addExpense_(body);
     if (typeof body.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(body.date) ||
         typeof body.category !== 'string' || !body.category.trim()) throw new Error('date и category обязательны');
     const planned = Number(body.planned), actual = Number(body.actual);
@@ -101,4 +103,86 @@ function deduplicateEntries() {
     SpreadsheetApp.flush();
     return {removed: obsolete.length, backup: backup.getName()};
   } finally { if (lock.hasLock()) lock.releaseLock(); }
+}
+
+// Independent expense ledger. Never writes to the savings sheet.
+function expensesSheet_(create) {
+  const book = SpreadsheetApp.getActiveSpreadsheet();
+  if (SHEET_NAME === 'Expenses') throw new Error('Имя листа накоплений не должно быть Expenses');
+  let sheet = book.getSheetByName('Expenses');
+  if (!sheet && create) {
+    sheet = book.insertSheet('Expenses');
+    sheet.getRange(1, 1, 1, 5).setValues([['Id','Category','Amount','Comment','CreatedAt']]);
+  }
+  if (sheet && sheet.getRange(1, 1, 1, 5).getValues()[0].join('|') !== 'Id|Category|Amount|Comment|CreatedAt') {
+    throw new Error('Лист Expenses должен содержать Id, Category, Amount, Comment, CreatedAt в A:E');
+  }
+  return sheet;
+}
+function expenses_(sheet) {
+  if (!sheet || sheet.getLastRow() < 2) return [];
+  return sheet.getRange(2, 1, sheet.getLastRow() - 1, 5).getValues()
+    .filter(row => row.some(value => value !== ''))
+    .map(row => {
+      const date = new Date(row[4]), amount = Number(row[2]);
+      if (!row[0] || !row[1] || !Number.isSafeInteger(amount) || amount <= 0 || !Number.isFinite(date.getTime())) {
+        throw new Error('Некорректная запись в листе Expenses');
+      }
+      return {Id:String(row[0]),Category:String(row[1]),Amount:amount,Comment:String(row[3]),CreatedAt:date.toISOString()};
+    });
+}
+function getExpensesResponse_() {
+  const lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(10000);
+    return json_({ok:true,expenses:expenses_(expensesSheet_(false))});
+  } catch(error) { return json_({ok:false,error:error.message}); }
+  finally { if(lock.hasLock()) lock.releaseLock(); }
+}
+function addExpense_(body) {
+  const lock = LockService.getScriptLock();
+  try {
+    if (typeof body.id !== 'string' || !/^[a-zA-Z0-9-]{16,80}$/.test(body.id) ||
+        typeof body.category !== 'string' || !body.category.trim() ||
+        !Number.isSafeInteger(body.amount) || body.amount <= 0 ||
+        typeof body.comment !== 'string' || !body.comment.trim() || body.comment.length > 2000 ||
+        !Array.isArray(body.dates) || !body.dates.length || body.dates.length > 100 ||
+        body.dates.some(date => typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date))) {
+      throw new Error('Введите корректную сумму и комментарий');
+    }
+    lock.waitLock(10000);
+    let sheet = expensesSheet_(false);
+    const history = expenses_(sheet), previous = history.find(e => e.Id === body.id);
+    // A lost HTTP acknowledgement is safe to retry, even after savings change.
+    if (previous) {
+      if (previous.Category !== body.category || previous.Amount !== body.amount || previous.Comment !== body.comment.trim()) {
+        throw new Error('Идентификатор уже использован другим расходом');
+      }
+      return json_({ok:true,expense:previous});
+    }
+    const dates = new Set(body.dates);
+    const accumulated = Array.from(latestEntries_(entries_(getEntriesSheet_())).values())
+      .filter(e => e.Category === body.category && dates.has(e.Date))
+      .reduce((sum,e) => sum + e.Actual, 0);
+    const spent = history.filter(e => e.Category === body.category).reduce((sum,e) => sum + e.Amount, 0);
+    if (!Number.isFinite(accumulated) || body.amount > accumulated - spent) {
+      return json_({ok:false,code:'INSUFFICIENT_BALANCE',error:'Сумма расхода превышает доступный остаток'});
+    }
+    if (!sheet) sheet = expensesSheet_(true);
+    const created = new Date(), index = sheet.getLastRow() + 1;
+    sheet.getRange(index, 1, 1, 2).setNumberFormat('@');
+    sheet.getRange(index, 1, 1, 5).setValues([[body.id,body.category,body.amount,'',created]]);
+    // Rich text stores comments as literal text, including leading '='.
+    try {
+      sheet.getRange(index, 4).setRichTextValue(SpreadsheetApp.newRichTextValue().setText(body.comment.trim()).build());
+    } catch (error) {
+      // Roll back an incomplete new record while still holding the lock.
+      sheet.deleteRow(index);
+      SpreadsheetApp.flush();
+      throw error;
+    }
+    SpreadsheetApp.flush();
+    return json_({ok:true,expense:{Id:body.id,Category:body.category,Amount:body.amount,Comment:body.comment.trim(),CreatedAt:created.toISOString()}});
+  } catch(error) { return json_({ok:false,error:error.message}); }
+  finally { if(lock.hasLock()) lock.releaseLock(); }
 }
