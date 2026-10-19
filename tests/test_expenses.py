@@ -28,7 +28,7 @@ with sync_playwright() as p:
     page.route('https://script.google.com/**',api)
     page.route('http://tracker.test/**',lambda r:r.fulfill(path=str(ROOT/('index.html' if r.request.url.endswith('/') else r.request.url.split('/')[-1]))))
     page.goto('http://tracker.test/')
-    page.locator('#expensesTab').click()
+    page.locator('[data-view=expenses]').click()
     page.wait_for_timeout(300)
     card=page.locator('.expense-card').first
     assert page.locator('.expense-card').count()==11
@@ -64,7 +64,7 @@ with sync_playwright() as p:
     page.wait_for_timeout(300)
     assert posts[-1]['id']==posts[-2]['id']
     page.reload()
-    page.locator('#expensesTab').click()
+    page.locator('[data-view=expenses]').click()
     page.wait_for_timeout(300)
     assert page.locator('.expense-card').first.locator('.expense-history li').count()==3
     page.set_viewport_size({'width':375,'height':812})

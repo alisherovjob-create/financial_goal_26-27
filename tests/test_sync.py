@@ -45,11 +45,14 @@ with sync_playwright() as p:
     context.route('http://tracker.test/expenses.js', lambda route: route.fulfill(path=str(HTML.parent / 'expenses.js'), content_type='text/javascript'))
     context.route('http://tracker.test/expenses.css', lambda route: route.fulfill(path=str(HTML.parent / 'expenses.css'), content_type='text/css'))
     context.route('http://tracker.test/design.css', lambda route: route.fulfill(path=str(HTML.parent / 'design.css'), content_type='text/css'))
+    context.route('http://tracker.test/workspace.css', lambda route: route.fulfill(path=str(HTML.parent / 'workspace.css'), content_type='text/css'))
+    context.route('http://tracker.test/workspace.js', lambda route: route.fulfill(path=str(HTML.parent / 'workspace.js'), content_type='text/javascript'))
     page.goto('http://tracker.test/')
     page.wait_for_timeout(300)
     assert page.locator('#syncStatus').get_attribute('data-status') == 'saved', 'Timestamp dates must load in a fresh browser'
     assert page.evaluate("actual['2026-09-25|Быт']") == 200, 'Duplicates must use newest UpdatedAt, not row order'
     page.evaluate("startDate.value='2026-09-18'; build(); selectedDate='2026-09-25'; render()")
+    page.locator('[data-view=payments]').click()
     field = page.locator('#allocation input').first
     assert field.input_value() == '200'
     cloud.clear()
@@ -120,6 +123,7 @@ with sync_playwright() as p:
     page.wait_for_timeout(500)
     assert cloud[0]['Actual'] == 444
     # Preserve the existing CSV path, and make reset/import participate in sync.
+    page.locator('[data-view=settings]').click()
     with page.expect_download() as download_info:
         page.locator('#export').click()
     csv_data = Path(download_info.value.path()).read_bytes()
